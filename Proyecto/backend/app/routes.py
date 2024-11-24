@@ -134,9 +134,6 @@ def contenido_orden_compra():
         # Llamar a la función que obtiene el contenido de la orden de compra
         contenido = ver_contenido_orden_compra(cod_orden)
 
-        if not contenido:
-            return jsonify({"error": "Orden de compra no encontrada"}), 404
-
         # Estructurar la respuesta
         return jsonify({"contenido": contenido}), 200
     except Exception as e:
