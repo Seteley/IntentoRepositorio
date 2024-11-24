@@ -477,11 +477,11 @@ def ingreso_condiciones(cod_ordencompra):
     try:
         cursor.execute(
             """
-            select distinct i.cod_insumo ,oc.cod_ordencompra, i.nombre_insumo, r.cantidad_recibida , c.nombre_condiciones from orden_comprainsumo oc 
-            inner join insumo i ON oc.cod_insumo =i.cod_insumo 
-            inner join revision r on r.cod_ordencompra = oc.cod_ordencompra
+            select distinct i.cod_insumo, i.nombre_insumo, r.cantidad_recibida, c.nombre_condiciones
+            from revision r
+            inner join insumo i on r.cod_insumo = i.cod_insumo
             inner join condiciones c on c.cod_condiciones = i.cod_condiciones 
-            where oc.cod_ordencompra = %s
+            where r.cod_ordencompra = %s
             """,
             (cod_ordencompra,)  # Parámetro de la consulta
         )
@@ -498,3 +498,4 @@ def ingreso_condiciones(cod_ordencompra):
     finally:
         cursor.close()
         conn.close()
+

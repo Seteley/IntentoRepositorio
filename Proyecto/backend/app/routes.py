@@ -355,17 +355,21 @@ def actualizar_revision_ruta():
 
 @router.route('/ingreso_condiciones', methods=['POST'])
 def obtener_ingreso_condiciones():
-    # Obtener el cod_ordencompra del cuerpo de la solicitud JSON
-    data = request.get_json()
-    cod_ordencompra = data.get('cod_ordencompra')  # Extraemos el valor de cod_ordencompra
+    try:
+        # Obtener el cod_ordencompra del cuerpo de la solicitud JSON
+        data = request.get_json()
+        cod_ordencompra = data.get('cod_ordencompra')  # Extraemos el valor de cod_ordencompra
 
-    if not cod_ordencompra:
-        return jsonify({"error": "El parámetro 'cod_ordencompra' es obligatorio."}), 400
+        if not cod_ordencompra:
+            return jsonify({"error": "El parámetro 'cod_ordencompra' es obligatorio."}), 400
 
-    # Llamar a la función ingreso_condiciones para obtener los detalles
-    detalles = ingreso_condiciones(cod_ordencompra)
+        # Llamar a la función ingreso_condiciones para obtener los detalles
+        detalles = ingreso_condiciones(cod_ordencompra)
 
-    if detalles is None:
-        return jsonify({"error": "No se encontraron detalles para la orden de compra"}), 404
+        if detalles is None:
+            return jsonify({"error": "No se encontraron detalles para la orden de compra."}), 404
 
-    return jsonify({"condiciones_insumos": detalles})
+        return jsonify({"condiciones_insumos": detalles}), 200
+
+    except Exception as e:
+        return jsonify({"error": f"Ocurrió un error inesperado: {str(e)}"}), 500

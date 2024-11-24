@@ -270,7 +270,7 @@ export const fetchDetallesRevision = async (cod_ordencompra) => {
 // service.js
 export const fetchCondicionesIngreso = async (cod_ordencompra) => {
   try {
-    const response = await fetch(`${API_URL}/ingreso_condiciones`, { // Asegúrate de que la URL es correcta
+    const response = await fetch(`${API_URL}/ingreso_condiciones`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
