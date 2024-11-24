@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useContext } from "react";
 import { EmpleadoContext } from "../context/EmpleadoContext"; // Importamos el contexto
 import { OrdenContext } from "../context/OrdenContext"; // Importamos el contexto de Orden
-import { fetchSupervisores, crearRevision, actualizarProceso } from "../Service";  // Importamos la función que consulta el API
-import { useNavigate } from 'react-router-dom';  // Importamos useNavigate
+import { fetchSupervisores, crearRevision, actualizarProceso } from "../Service"; // Importamos la función actualizada
+import { useNavigate } from 'react-router-dom'; // Importamos useNavigate
 
 const AsignarSupervisores = () => {
   const { empleado } = useContext(EmpleadoContext); // Usamos el contexto para obtener el código del empleado
@@ -13,15 +13,15 @@ const AsignarSupervisores = () => {
   const [codSupCantidad, setCodSupCantidad] = useState(null);
   const [codSupCalidad, setCodSupCalidad] = useState(null);
 
-  const navigate = useNavigate();  // Definimos la función navigate para redirigir
+  const navigate = useNavigate(); // Definimos la función navigate para redirigir
 
   // Usamos useEffect para hacer la solicitud al backend solo si empleado tiene valor
   useEffect(() => {
     if (empleado) {
       const fetchSupervisoresData = async () => {
         try {
-          const data = await fetchSupervisores(empleado);  // Usamos el código de empleado obtenido del contexto
-          setSupervisores(data);  // Guardamos los supervisores obtenidos
+          const data = await fetchSupervisores(empleado); // Usamos el código de empleado obtenido del contexto
+          setSupervisores(data); // Guardamos los supervisores obtenidos
         } catch (err) {
           setError("No se pudo cargar los supervisores.");
           console.error(err);
@@ -39,16 +39,17 @@ const AsignarSupervisores = () => {
     }
 
     try {
-      // Primero, actualizar el proceso de la orden
-      const responseProceso = await actualizarProceso(ordenSeleccionada);
+      // Primero, actualizar el proceso de la orden a la etapa deseada (por ejemplo, 2)
+      const codProceso = 2; // Etapa del proceso
+      const responseProceso = await actualizarProceso(ordenSeleccionada, codProceso);
 
       if (responseProceso.message) {
         console.log("Proceso actualizado exitosamente:", responseProceso.message);
-        
+
         // Luego, crear la revisión
         const responseRevision = await crearRevision(ordenSeleccionada, codSupCantidad, codSupCalidad);
         console.log("Revisión creada exitosamente:", responseRevision);
-        
+
         // Redirigir a la página de RevisionCantidad
         navigate('/modulo5/revisioncantidad');
       } else {

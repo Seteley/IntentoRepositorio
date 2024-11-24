@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useOrden } from "../context/OrdenContext"; // Importamos el hook del contexto
-import { fetchDetallesRevision } from "../Service"; // Importamos la nueva función de servicio
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate
+import { fetchDetallesRevision, actualizarProceso } from "../Service"; // Importamos las funciones necesarias
+import { useNavigate } from "react-router-dom"; // Importar useNavigate
 
 function Revisiones() {
   const { ordenSeleccionada, isLoading: loadingOrden } = useOrden();
   const [detallesRevision, setDetallesRevision] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  
-  // Usar useNavigate para redirigir
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const obtenerDetalles = async () => {
-      if (!ordenSeleccionada) return; // Si no hay orden seleccionada, no hacemos nada
+      if (!ordenSeleccionada) return;
       setLoading(true);
       try {
         const response = await fetchDetallesRevision(ordenSeleccionada);
-        setDetallesRevision(response.detalles || []); // Guardamos los detalles en el estado
+        setDetallesRevision(response.detalles || []);
       } catch (err) {
         setError("Error al obtener los detalles de la revisión.");
         console.error(err);
@@ -30,21 +29,30 @@ function Revisiones() {
     obtenerDetalles();
   }, [ordenSeleccionada]);
 
+  const actualizarCodProceso = async (codProceso) => {
+    if (!ordenSeleccionada) return;
+
+    setLoading(true);
+    try {
+      await actualizarProceso(ordenSeleccionada, codProceso);
+      alert(
+        codProceso === 5
+          ? "Pedido aceptado."
+          : "Pedido rechazado."
+      );
+      if (codProceso === 5) navigate("/modulo5/ingresoinicio");
+    } catch (err) {
+      console.error("Error al actualizar el proceso:", err);
+      alert("Hubo un error al procesar la solicitud.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loadingOrden) return <p>Cargando orden...</p>;
   if (!ordenSeleccionada) return <p>No hay una orden seleccionada.</p>;
   if (loading) return <p>Cargando detalles de la revisión...</p>;
   if (error) return <p>{error}</p>;
-
-  const handleAceptarPedido = () => {
-    // Lógica para aceptar el pedido
-    alert("Pedido aceptado.");
-    navigate("/modulo5/ingresoinicio"); // Redirigir a la página deseada
-  };
-
-  const handleRechazarPedido = () => {
-    // Lógica para rechazar el pedido
-    alert("Pedido rechazado.");
-  };
 
   return (
     <div>
@@ -78,10 +86,19 @@ function Revisiones() {
         </table>
       )}
 
-      {/* Botones de aceptar y rechazar pedido */}
       <div>
-        <button onClick={handleAceptarPedido}>Aceptar pedido</button>
-        <button onClick={handleRechazarPedido}>Rechazar pedido</button>
+        <button
+          onClick={() => actualizarCodProceso(5)}
+          disabled={loading}
+        >
+          {loading ? "Procesando..." : "Aceptar pedido"}
+        </button>
+        <button
+          onClick={() => actualizarCodProceso(6)}
+          disabled={loading}
+        >
+          {loading ? "Procesando..." : "Rechazar pedido"}
+        </button>
       </div>
     </div>
   );

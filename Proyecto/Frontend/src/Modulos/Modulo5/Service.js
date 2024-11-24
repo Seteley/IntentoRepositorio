@@ -104,22 +104,23 @@ export const crearRevision = async (codOrdencompra, codSupCantidad, codSupCalida
 };
 
 
-export const actualizarProceso = async (codOrdencompra) => {
+export const actualizarProceso = async (codOrdencompra, codProceso) => {
   try {
-    const response = await fetch(`${API_URL}/actualizar_proceso2`, {
+    const response = await fetch(`${API_URL}/actualizar_proceso`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         cod_ordencompra: codOrdencompra,
+        cod_proceso: codProceso,
       }),
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error("Error al actualizar el proceso de la orden");
+      throw new Error(data.error || "Error al actualizar el proceso de la orden");
     }
 
     return data; // Retorna la respuesta del servidor
@@ -128,6 +129,7 @@ export const actualizarProceso = async (codOrdencompra) => {
     throw error;
   }
 };
+
 
 
 export const fetchCantidades = async (codOrdenCompra) => {

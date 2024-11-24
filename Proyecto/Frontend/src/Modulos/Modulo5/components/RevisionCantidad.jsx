@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useOrden } from '../context/OrdenContext'; // Importa el contexto
-import { fetchCantidades, actualizarCantidadRecibida } from '../Service'; // Importa funciones de servicio
+import { fetchCantidades, actualizarCantidadRecibida, actualizarProceso  } from '../Service'; // Importa funciones de servicio
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 
 const RevisionCantidad = () => {
@@ -40,6 +40,7 @@ const RevisionCantidad = () => {
 
   const handleTerminarRevision = async () => {
     try {
+      // Actualiza las cantidades recibidas
       for (const item of cantidades) {
         await actualizarCantidadRecibida(
           ordenSeleccionada,
@@ -47,12 +48,17 @@ const RevisionCantidad = () => {
           item.cantidad_recibida
         );
       }
-      alert("Revisión finalizada correctamente.");
+  
+      // Actualiza el proceso a 3
+      await actualizarProceso(ordenSeleccionada, 3);
+  
+      alert("Revisión finalizada correctamente y proceso actualizado.");
     } catch (error) {
       alert("Error al finalizar la revisión. Por favor, inténtalo de nuevo.");
       console.error(error);
     }
   };
+  
 
   // Manejamos diferentes estados de carga
   if (loading) return <p>Cargando datos...</p>;

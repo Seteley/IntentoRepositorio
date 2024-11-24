@@ -251,20 +251,21 @@ def insertar_revision(cod_ordencompra, cod_supcantidad, cod_supcalidad):
         cursor.close()
         conn.close()
 
+
 ## Actualizar proceso
 # Función para actualizar el proceso de una orden de compra
-def actualizar_proceso_orden_a_2(cod_ordencompra):
+def actualizar_proceso_orden(cod_ordencompra, cod_proceso):
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     try:
-        # Actualizar el proceso de la orden a 2
+        # Actualizar el proceso de la orden al valor especificado
         cursor.execute(
             """
             UPDATE orden_compra 
-            SET cod_proceso = 2 
+            SET cod_proceso = %s 
             WHERE cod_ordencompra = %s
             """,
-            (cod_ordencompra,)
+            (cod_proceso, cod_ordencompra)
         )
         filas_afectadas = cursor.rowcount  # Número de filas actualizadas
         conn.commit()
@@ -272,6 +273,7 @@ def actualizar_proceso_orden_a_2(cod_ordencompra):
     finally:
         cursor.close()
         conn.close()
+
 
 #Mostrar tabla de las cantidades que deberían llegar:
 def mostrar_cantidades(cod_ordencompra):

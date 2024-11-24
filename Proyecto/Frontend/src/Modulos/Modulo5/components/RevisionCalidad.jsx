@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { fetchCalidades, fetchValoresCalidad, actualizarRevision } from "../Service";
+import { fetchCalidades, fetchValoresCalidad, actualizarRevision, actualizarProceso } from "../Service"; // Importa actualizarProceso
 import { useOrden } from "../context/OrdenContext"; 
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate
+import { useNavigate } from 'react-router-dom'; 
 
 function RevisionCalidad() {
   const { ordenSeleccionada, isLoading: loadingOrden } = useOrden();
@@ -10,7 +10,7 @@ function RevisionCalidad() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const navigate = useNavigate(); // Crear el hook de navegación
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getCalidades = async () => {
@@ -74,7 +74,10 @@ function RevisionCalidad() {
         }
       }
 
-      alert("Revisión terminada y actualizada.");
+      // Actualizar el proceso a 4
+      await actualizarProceso(ordenSeleccionada, 4);
+
+      alert("Revisión terminada y proceso actualizado.");
     } catch (err) {
       console.error("Error al actualizar la revisión:", err);
       alert("Hubo un error al terminar la revisión.");
@@ -82,7 +85,6 @@ function RevisionCalidad() {
       setLoading(false);
     }
   };
-
 
   if (loadingOrden) return <p>Cargando orden...</p>;
   if (!ordenSeleccionada) return <p>No hay una orden seleccionada.</p>;
@@ -143,7 +145,6 @@ function RevisionCalidad() {
         {loading ? "Cargando..." : "Terminar revisión"}
       </button>
       <button onClick={() => navigate("/modulo5/revisiones")}>Ver revisiones</button>
-
     </div>
   );
 }

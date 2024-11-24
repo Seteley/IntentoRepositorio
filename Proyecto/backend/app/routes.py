@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from .models import get_all_empleados, create_empleado, update_empleado, get_all_insumos, get_all_condiciones, get_all_unidades, get_local_empleado, get_ordencompra_mismodia, ver_contenido_orden_compra, get_empleado_supervisor, insertar_revision, actualizar_proceso_orden_a_2, obtener_detalles_revision, mostrar_cantidades, actualizar_cantidad_recibida, valorescalidad, mostrar_calidades, actualizar_revision, ingreso_condiciones
+from .models import get_all_empleados, create_empleado, update_empleado, get_all_insumos, get_all_condiciones, get_all_unidades, get_local_empleado, get_ordencompra_mismodia, ver_contenido_orden_compra, get_empleado_supervisor, insertar_revision, actualizar_proceso_orden, obtener_detalles_revision, mostrar_cantidades, actualizar_cantidad_recibida, valorescalidad, mostrar_calidades, actualizar_revision, ingreso_condiciones
 
 router = Blueprint("router", __name__)
 
@@ -196,19 +196,20 @@ def crear_revision():
 
 
 # Ruta para actualizar el proceso de una orden de compra a 2
-@router.route('/actualizar_proceso2', methods=['POST'])
+@router.route('/actualizar_proceso', methods=['POST'])
 def actualizar_proceso():
     try:
-        # Obtener el código de la orden desde el cuerpo de la solicitud (request)
+        # Obtener los datos desde el cuerpo de la solicitud (request)
         data = request.json
         cod_ordencompra = data.get("cod_ordencompra")
+        cod_proceso = data.get("cod_proceso")
         
-        # Verificar si el código de orden de compra fue proporcionado
-        if not cod_ordencompra:
-            return jsonify({"error": "El código de la orden es requerido"}), 400
+        # Verificar si se proporcionaron ambos parámetros
+        if not cod_ordencompra or cod_proceso is None:
+            return jsonify({"error": "El código de la orden y el código de proceso son requeridos"}), 400
         
         # Llamar a la función que actualiza el proceso de la orden
-        filas_afectadas = actualizar_proceso_orden_a_2(cod_ordencompra)
+        filas_afectadas = actualizar_proceso_orden(cod_ordencompra, cod_proceso)
 
         # Verificar si se actualizó alguna fila
         if filas_afectadas > 0:
