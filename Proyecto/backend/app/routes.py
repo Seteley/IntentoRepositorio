@@ -143,9 +143,16 @@ def contenido_orden_compra():
 
 #Ruta para ver los empleados que pueden ser supervisores
 # Ruta para ver los empleados que pueden ser supervisores
-@router.route("/asignacion/<int:cod_empleado>", methods=["GET"])
-def asignacion_empleado(cod_empleado):
+@router.route("/asignacion", methods=["POST"])
+def asignacion_empleado():
     try:
+        # Obtener el 'cod_empleado' del cuerpo de la solicitud (JSON)
+        data = request.get_json()  # Obtenemos el cuerpo de la solicitud en formato JSON
+        cod_empleado = data.get("cod_empleado")  # Extraemos el 'cod_empleado' del JSON
+
+        if not cod_empleado:
+            return jsonify({"error": "Falta el código de empleado"}), 400
+
         # Llamamos a la función que obtiene la asignación del empleado
         contenido = get_empleado_supervisor(cod_empleado)
 
@@ -159,6 +166,7 @@ def asignacion_empleado(cod_empleado):
     except Exception as e:
         # Si ocurre un error inesperado, lo manejamos y devolvemos un mensaje de error genérico
         return jsonify({"error": "Ocurrió un error en el servidor: " + str(e)}), 500
+
 
 
 
