@@ -14,7 +14,7 @@ const Inicio = () => {
   // Verifica si el empleado está definido antes de navegar a "Ingreso Insumo"
   const handleIngresoInsumo = () => {
     if (empleado) {
-      navigate(`/modulo5/ingresoinsumo/verordenes/${empleado}`);
+      navigate(`/modulo5/ingresoinsumo/verordenes`);
     } else {
       // En lugar de un alert, puedes mostrar un mensaje en la UI
       alert("Por favor ingrese un código de empleado primero.");
