@@ -32,7 +32,7 @@ const OrdenMismoDia = () => {
   const handleSeleccionarOrden = () => {
     if (ordenSeleccionada) {
       selectOrden(ordenSeleccionada); // Guardar en el contexto
-      navigate(`/modulo5/contenidoorden/${ordenSeleccionada}`); // Redirigir
+      navigate(`/modulo5/contenidoorden`); // Redirigir
     } else {
       alert("Por favor, selecciona una orden.");
     }

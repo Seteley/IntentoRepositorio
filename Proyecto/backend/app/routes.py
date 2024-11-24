@@ -120,10 +120,17 @@ def get_ordencompra_mismodia_route():
 
 
 
-#Ruta para ver contenido de orden de compra
-@router.route("/contenido/<int:cod_orden>", methods=["GET"])
-def contenido_orden_compra(cod_orden):
+
+@router.route("/contenido", methods=["POST"])
+def contenido_orden_compra():
     try:
+        # Obtener el 'cod_orden' del cuerpo de la solicitud
+        data = request.get_json()  # Obtenemos el cuerpo de la solicitud en formato JSON
+        cod_orden = data.get("cod_orden")  # Extraemos el 'cod_orden' del JSON
+
+        if not cod_orden:
+            return jsonify({"error": "Falta el código de la orden de compra"}), 400
+
         # Llamar a la función que obtiene el contenido de la orden de compra
         contenido = ver_contenido_orden_compra(cod_orden)
 
@@ -134,6 +141,7 @@ def contenido_orden_compra(cod_orden):
         return jsonify({"contenido": contenido}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 
 #Ruta para ver los empleados que pueden ser supervisores

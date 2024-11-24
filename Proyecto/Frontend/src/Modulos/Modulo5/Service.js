@@ -29,19 +29,27 @@ export const fetchOrdenesMismoDia = async (codigoEmpleado) => {
 
 export const fetchContenidoOrden = async (codOrden) => {
   try {
-    const response = await fetch(`${API_URL}/contenido/${codOrden}`);
-    const data = await response.json(); // Asumimos que la respuesta está en formato JSON
+    const response = await fetch(`${API_URL}/contenido`, {
+      method: 'POST',  // Usamos POST en lugar de GET
+      headers: {
+        'Content-Type': 'application/json',  // Especificamos que el contenido es JSON
+      },
+      body: JSON.stringify({ cod_orden: codOrden }),  // Pasamos el código de la orden en el cuerpo
+    });
+
+    const data = await response.json();  // Obtenemos la respuesta en formato JSON
 
     if (!response.ok) {
       throw new Error("Error al obtener el contenido de la orden.");
     }
 
-    return data.contenido; // Retorna el contenido de la orden
+    return data.contenido;  // Retornamos el contenido de la orden
   } catch (error) {
     console.error("Error en fetchContenidoOrden:", error);
     throw error;
   }
 };
+
 
 export const fetchSupervisores = async (codigoEmpleado) => {
   try {

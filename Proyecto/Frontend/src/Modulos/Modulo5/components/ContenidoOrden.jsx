@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { fetchContenidoOrden } from "../Service"; // Importa la función desde service.js
+import { useNavigate } from "react-router-dom";
+import { useOrden } from "../context/OrdenContext"; // Importamos el hook del contexto
+import { fetchContenidoOrden } from "../Service"; // Importamos la función desde service.js
 
 const ContenidoOrden = () => {
-  const { codOrden } = useParams(); // Obtener el código de la orden desde la URL
+  const { ordenSeleccionada, isLoading } = useOrden(); // Obtener el código de la orden desde el contexto
   const [contenido, setContenido] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -11,16 +12,24 @@ const ContenidoOrden = () => {
   useEffect(() => {
     const fetchContenido = async () => {
       try {
-        const data = await fetchContenidoOrden(codOrden); // Llama a la función desde service.js
-        setContenido(data); // Guarda el contenido en el estado
+        if (ordenSeleccionada) {
+          const data = await fetchContenidoOrden(ordenSeleccionada); // Llama a la función pasando el código de la orden desde el contexto
+          setContenido(data); // Guarda el contenido en el estado
+        }
       } catch (err) {
         setError("No se pudo cargar el contenido de la orden.");
         console.error(err);
       }
     };
 
-    fetchContenido();
-  }, [codOrden]);
+    if (ordenSeleccionada) {
+      fetchContenido();
+    }
+  }, [ordenSeleccionada]); // Vuelve a ejecutarse si cambia la orden seleccionada
+
+  if (isLoading) {
+    return <p>Cargando...</p>; // Mientras se está cargando el estado
+  }
 
   return (
     <div>

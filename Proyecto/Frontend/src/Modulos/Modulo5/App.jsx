@@ -32,7 +32,7 @@ const App = () => {
 
           {/* Ruta para las órdenes de compra del mismo día */}
           <Route path="/ingresoinsumo/verordenes" element={<OrdenMismoDia />} />
-          <Route path="/contenidoorden/:codOrden" element={<ContenidoOrden />} />
+          <Route path="/contenidoorden" element={<ContenidoOrden />} />
           <Route path="/asignarsupervisores" element={<AsignarSupervisores />} />
           <Route path="/revisioncantidad" element={<RevisionCantidad />} />
           <Route path="/revisioncalidad" element={<RevisionCalidad />} />
