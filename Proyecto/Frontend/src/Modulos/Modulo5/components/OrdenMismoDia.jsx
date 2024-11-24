@@ -1,35 +1,38 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // Importa useNavigate para la navegación
-import { fetchOrdenesMismoDia } from "../Service"; // Importar la función del archivo Service.js
-import { useOrden } from "../context/OrdenContext"; // Importar el hook useOrden para acceder al contexto
+import React, { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom"; // Hook para la navegación
+import { fetchOrdenesMismoDia } from "../Service"; // Función del servicio
+import { useOrden } from "../context/OrdenContext"; // Contexto de orden
+import { EmpleadoContext } from "../context/EmpleadoContext"; // Contexto del empleado
 
 const OrdenMismoDia = () => {
-  const { codigoEmpleado } = useParams(); // Obtener el código del empleado desde la URL
-  const [ordenes, setOrdenes] = useState([]); // Estado para guardar las órdenes
-  const [error, setError] = useState(null); // Estado para manejar errores
-  const [ordenSeleccionada, setOrdenSeleccionada] = useState(null); // Estado para guardar la orden seleccionada temporalmente
-  const { selectOrden } = useOrden(); // Obtener la función selectOrden del contexto
-  const navigate = useNavigate(); // Hook para la navegación
+  const { empleado } = useContext(EmpleadoContext); // Obtener el código de empleado del contexto
+  const [ordenes, setOrdenes] = useState([]); // Estado para las órdenes
+  const [error, setError] = useState(null); // Estado de error
+  const [ordenSeleccionada, setOrdenSeleccionada] = useState(null); // Orden seleccionada
+  const { selectOrden } = useOrden(); // Contexto para manejar la selección de órdenes
+  const navigate = useNavigate(); // Hook de navegación
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchOrdenesMismoDia(codigoEmpleado); // Llamar a la función del servicio
-        setOrdenes(data.ordenes); // Guardar las órdenes en el estado
+        const data = await fetchOrdenesMismoDia(empleado); // Llama al servicio con el empleado
+        setOrdenes(data.ordenes); // Guarda las órdenes
       } catch (err) {
         setError("No se pudieron cargar las órdenes de compra.");
         console.error(err);
       }
     };
 
-    fetchData();
-  }, [codigoEmpleado]); // Ejecutar cuando cambia el parámetro
+    if (empleado) {
+      fetchData(); // Cargar datos solo si hay un empleado
+    }
+  }, [empleado]); // Ejecutar cuando el empleado cambie
 
-  // Función para manejar la selección de orden
+  // Manejo de la selección de órdenes
   const handleSeleccionarOrden = () => {
     if (ordenSeleccionada) {
-      selectOrden(ordenSeleccionada); // Usar selectOrden del contexto para guardar la orden seleccionada
-      navigate(`/modulo5/contenidoorden/${ordenSeleccionada}`); // Redirige con el código de la orden
+      selectOrden(ordenSeleccionada); // Guardar en el contexto
+      navigate(`/modulo5/contenidoorden/${ordenSeleccionada}`); // Redirigir
     } else {
       alert("Por favor, selecciona una orden.");
     }
@@ -39,9 +42,7 @@ const OrdenMismoDia = () => {
     <div>
       <h2>Órdenes de Compra del Mismo Día</h2>
       {error && <p>{error}</p>}
-      {!error && ordenes.length === 0 && (
-        <p>No se encontraron órdenes de compra.</p>
-      )}
+      {!error && ordenes.length === 0 && <p>No se encontraron órdenes de compra.</p>}
       {!error && ordenes.length > 0 && (
         <>
           <table>
@@ -62,9 +63,9 @@ const OrdenMismoDia = () => {
                   <td>
                     <input
                       type="radio"
-                      name="ordenSeleccionada" // Misma propiedad name para seleccionar solo uno
+                      name="ordenSeleccionada"
                       value={orden.cod_ordencompra}
-                      onChange={() => setOrdenSeleccionada(orden.cod_ordencompra)} // Actualiza el estado con la orden seleccionada
+                      onChange={() => setOrdenSeleccionada(orden.cod_ordencompra)}
                     />
                   </td>
                 </tr>
@@ -72,9 +73,7 @@ const OrdenMismoDia = () => {
             </tbody>
           </table>
           <div>
-            {/* Botón para seleccionar la orden */}
             <button onClick={handleSeleccionarOrden}>Seleccionar orden</button>
-            {/* Botón para volver al módulo */}
             <button onClick={() => navigate("/modulo5/inicio")}>Volver al módulo</button>
           </div>
         </>

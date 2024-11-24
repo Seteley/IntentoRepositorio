@@ -4,9 +4,16 @@ const API_URL = import.meta.env.VITE_APP_API_URL;
 // Función para obtener órdenes de compra del mismo día
 export const fetchOrdenesMismoDia = async (codigoEmpleado) => {
   try {
-    const response = await fetch(`${API_URL}/ordencompra/${codigoEmpleado}`);
+    const response = await fetch(`${API_URL}/ordencompra`, {
+      method: "POST", // Cambiamos a POST
+      headers: {
+        "Content-Type": "application/json", // Indicamos que enviamos JSON
+      },
+      body: JSON.stringify({ codigo_empleado: codigoEmpleado }), // Enviamos el parámetro en el cuerpo
+    });
+
     const responseText = await response.text(); // Leer la respuesta como texto
-    console.log('Respuesta del servidor:', responseText);
+    console.log("Respuesta del servidor:", responseText);
 
     if (!response.ok) {
       throw new Error("Error al obtener órdenes de compra");
@@ -18,6 +25,7 @@ export const fetchOrdenesMismoDia = async (codigoEmpleado) => {
     throw error;
   }
 };
+
 
 export const fetchContenidoOrden = async (codOrden) => {
   try {

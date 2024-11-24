@@ -87,9 +87,17 @@ def get_unidad():
 
 
 
-@router.route("/ordencompra/<int:codigo_empleado>", methods=["GET"])
-def get_ordencompra_mismodia_route(codigo_empleado):
+@router.route("/ordencompra", methods=["POST"])
+def get_ordencompra_mismodia_route():
     try:
+        # Obtener el cuerpo de la solicitud
+        data = request.get_json()
+        codigo_empleado = data.get("codigo_empleado")
+
+        # Validar que se recibió el parámetro necesario
+        if not codigo_empleado:
+            return jsonify({"error": "El parámetro 'codigo_empleado' es obligatorio."}), 400
+
         # Llamamos a la función que obtiene las órdenes de compra para el mismo día
         print(f"Buscando órdenes de compra para el empleado con código: {codigo_empleado}")
         ordenes = get_ordencompra_mismodia(codigo_empleado)
@@ -99,16 +107,17 @@ def get_ordencompra_mismodia_route(codigo_empleado):
             return jsonify({"message": "No se encontraron órdenes de compra para hoy"}), 404
 
         # Si hay órdenes de compra, las devolvemos directamente
-        return jsonify({"ordenes": ordenes}), 200  # Ya están en el formato adecuado
+        return jsonify({"ordenes": ordenes}), 200
 
     except ValueError as ve:
         # Capturamos errores esperados (como empleado no asignado a un local)
-        print(f"Error esperado: {ve}")  # Para depuración
+        print(f"Error esperado: {ve}")
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
         # Si ocurre un error inesperado, lo manejamos y devolvemos un mensaje de error genérico
-        print(f"Error inesperado: {e}")  # Para depuración
+        print(f"Error inesperado: {e}")
         return jsonify({"error": "Ocurrió un error en el servidor: " + str(e)}), 500
+
 
 
 #Ruta para ver contenido de orden de compra
