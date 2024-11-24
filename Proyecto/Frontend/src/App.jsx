@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Modulo4 from "./Modulos/Modulo4/App";
 import Modulo5 from "./Modulos/Modulo5/App";
+import Default from "./Default"
 
 const App = () => {
   return (
@@ -17,7 +18,7 @@ const App = () => {
           <Route path="*" element={<Navigate to="/" />} />
 
           {/* Ruta por defecto */}
-          <Route path="/" element={<Modulo4 />} />
+          <Route path="/" element={<Default/>} />
         </Routes>
       </div>
     </Router>
