@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchCalidades, fetchValoresCalidad, actualizarRevision, actualizarProceso } from "../Service"; // Importa actualizarProceso
+import { fetchCalidades, fetchValoresCalidad, actualizarRevision, actualizarProceso, fetchActualizarRevisionCalidad } from "../Service"; // Importar la nueva función fetchActualizarRevisionCalidad
 import { useOrden } from "../context/OrdenContext"; 
 import { useNavigate } from 'react-router-dom'; 
 
@@ -76,6 +76,10 @@ function RevisionCalidad() {
 
       // Actualizar el proceso a 4
       await actualizarProceso(ordenSeleccionada, 4);
+
+      // Aquí llamamos a la función que se encargará de actualizar la fecha y hora de calidad
+      const resultado = await fetchActualizarRevisionCalidad(ordenSeleccionada);
+      console.log(resultado); // Si quieres ver el mensaje en consola
 
       alert("Revisión terminada y proceso actualizado.");
     } catch (err) {

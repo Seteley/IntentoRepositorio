@@ -1,0 +1,60 @@
+/* src/styles/FormularioEmpleado.css */
+
+/* Asegúrate de que el body ocupe toda la pantalla y esté centrado */
+body {
+    display: flex;
+    justify-content: center;  /* Centra el contenido horizontalmente */
+    align-items: center;  /* Centra el contenido verticalmente */
+    min-height: 100vh;  /* Ocupa el 100% de la altura de la ventana */
+    margin: 0;  /* Elimina márgenes predeterminados */
+  }
+  
+  .formulario-empleado {
+    max-width: 400px;
+    margin: 0 auto;  /* Esto ya centra el formulario horizontalmente */
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  
+    /* Centrado adicional con Flexbox (aunque no es necesario en este caso específico) */
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* Centra los elementos horizontalmente */
+  }
+  
+  .formulario-empleado h2 {
+    color: #000000;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .formulario-empleado form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;  /* Asegura que el formulario ocupe el 100% del contenedor */
+  }
+  
+  .formulario-empleado input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .formulario-empleado button {
+    padding: 10px 15px;
+    background-color: #ff0000;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .formulario-empleado button:hover {
+    background-color: #cc0000;
+  }
+  

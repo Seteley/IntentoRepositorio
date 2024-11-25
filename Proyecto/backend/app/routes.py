@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from .models import get_all_empleados, create_empleado, update_empleado, get_all_insumos, get_all_condiciones, get_all_unidades, get_local_empleado, get_ordencompra_mismodia, ver_contenido_orden_compra, get_empleado_supervisor, insertar_revision, actualizar_proceso_orden, obtener_detalles_revision, mostrar_cantidades, actualizar_cantidad_recibida, valorescalidad, mostrar_calidades, actualizar_revision, ingreso_condiciones
+from .models import get_all_empleados, create_empleado, update_empleado, get_all_insumos, get_all_condiciones, get_all_unidades, get_local_empleado, get_ordencompra_mismodia, ver_contenido_orden_compra, get_empleado_supervisor, insertar_revision, actualizar_proceso_orden, obtener_detalles_revision, mostrar_cantidades, actualizar_cantidad_recibida, valorescalidad, mostrar_calidades, actualizar_revision, ingreso_condiciones, VerAlmacen, ingresar_stock, ingresar_movimiento, actualizar_fin_ingreso, actualizar_revision_calidad, actualizar_revision_cantidad
 
 router = Blueprint("router", __name__)
 
@@ -374,3 +374,138 @@ def obtener_ingreso_condiciones():
 
     except Exception as e:
         return jsonify({"error": f"Ocurrió un error inesperado: {str(e)}"}), 500
+
+
+
+@router.route('/ver_almacen', methods=['POST'])
+def ver_almacen():
+    # Obtenemos los parámetros enviados en la solicitud POST
+    data = request.get_json()
+    
+    # Validamos que los parámetros existan
+    if 'codigo_empleado' not in data or 'codigo_insumo' not in data:
+        return jsonify({"error": "Se requieren 'codigo_empleado' y 'codigo_insumo'"}), 400
+    
+    codigo_empleado = data['codigo_empleado']
+    codigo_insumo = data['codigo_insumo']
+    
+    # Llamamos a la función VerAlmacen
+    resultados = VerAlmacen(codigo_empleado, codigo_insumo)
+    
+    # Si hay un error o no se encontraron resultados, lo indicamos
+    if isinstance(resultados, str):  # Si la función retorna un mensaje de error
+        return jsonify({"error": resultados}), 400
+    else:
+        # Si hay resultados, los retornamos en formato JSON
+        return jsonify({"resultados": resultados}), 200
+    
+
+
+
+@router.route('/ingresar_stock', methods=['POST'])
+def obtener_ingreso_stock():
+    try:
+        # Obtener los parámetros enviados en la solicitud JSON
+        data = request.get_json()
+
+        # Extraemos los valores de los parámetros
+        fechaven = data.get('fechaven')
+        cod_insumo = data.get('cod_insumo')
+        cod_ordencompra = data.get('cod_ordencompra')
+        cod_almacen = data.get('cod_almacen')
+
+        # Validar que todos los parámetros sean proporcionados
+        if not fechaven or not cod_insumo or not cod_ordencompra or not cod_almacen:
+            return jsonify({"error": "Todos los parámetros ('fechaven', 'cod_insumo', 'cod_ordencompra', 'cod_almacen') son obligatorios."}), 400
+
+        # Llamar a la función para ingresar el stock
+        resultado = ingresar_stock(fechaven, cod_insumo, cod_ordencompra, cod_almacen)
+
+        # Si la inserción fue exitosa, retornamos un mensaje de éxito
+        if "Ingreso de stock realizado correctamente" in resultado:
+            return jsonify({"mensaje": resultado}), 200
+        else:
+            return jsonify({"error": resultado}), 400
+
+    except Exception as e:
+        # Manejo de excepciones generales
+        return jsonify({"error": f"Ocurrió un error inesperado: {str(e)}"}), 500
+
+
+
+@router.route('/ingresar_movimiento', methods=['POST'])
+def obtener_ingreso_movimiento():
+    try:
+        # Obtener los parámetros enviados en la solicitud JSON
+        data = request.get_json()
+
+        # Extraemos los valores de los parámetros
+        cod_ordencompra = data.get('cod_ordencompra')
+        cod_insumo = data.get('cod_insumo')
+        cod_empleado = data.get('cod_empleado')
+
+        # Validar que todos los parámetros sean proporcionados
+        if not cod_ordencompra or not cod_insumo or not cod_empleado:
+            return jsonify({"error": "Todos los parámetros ('cod_ordencompra', 'cod_insumo', 'cod_empleado') son obligatorios."}), 400
+
+        # Llamar a la función para ingresar el movimiento
+        resultado = ingresar_movimiento(cod_ordencompra, cod_insumo, cod_empleado)
+
+        # Si la inserción fue exitosa, retornamos un mensaje de éxito
+        if "Ingreso de movimiento realizado correctamente" in resultado:
+            return jsonify({"mensaje": resultado}), 200
+        else:
+            return jsonify({"error": resultado}), 400
+
+    except Exception as e:
+        # Manejo de excepciones generales
+        return jsonify({"error": f"Ocurrió un error inesperado: {str(e)}"}), 500
+
+
+
+@router.route('/actualizar-fin-ingreso', methods=['POST'])
+def actualizar_fin_ingreso_ruta():
+    try:
+        mensaje = actualizar_fin_ingreso()  # Llamar a la función con el nuevo nombre
+        return jsonify({"mensaje": mensaje})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@router.route('/actualizar-revision-calidad', methods=['POST'])
+def actualizar_revision_calidad_ruta():
+    try:
+        # Obtener el 'cod_ordencompra' desde el cuerpo de la solicitud
+        data = request.get_json()
+        cod_ordencompra = data.get('cod_ordencompra')
+
+        if not cod_ordencompra:
+            return jsonify({"error": "El código de orden de compra es requerido."}), 400
+
+        # Llamar a la función para actualizar la fecha y hora
+        mensaje = actualizar_revision_calidad(cod_ordencompra)
+        
+        return jsonify({"mensaje": mensaje}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+
+@router.route('/actualizar-revision-cantidad', methods=['POST'])
+def actualizar_revision_cantidad_ruta():
+    try:
+        # Obtener el 'cod_ordencompra' desde el cuerpo de la solicitud
+        data = request.get_json()
+        cod_ordencompra = data.get('cod_ordencompra')
+
+        if not cod_ordencompra:
+            return jsonify({"error": "El código de orden de compra es requerido."}), 400
+
+        # Llamar a la función para actualizar la fecha y hora
+        mensaje = actualizar_revision_cantidad(cod_ordencompra)
+
+        return jsonify({"mensaje": mensaje}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

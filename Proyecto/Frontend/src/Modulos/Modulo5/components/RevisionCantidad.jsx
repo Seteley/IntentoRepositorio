@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useOrden } from '../context/OrdenContext'; // Importa el contexto
-import { fetchCantidades, actualizarCantidadRecibida, actualizarProceso  } from '../Service'; // Importa funciones de servicio
+import { fetchCantidades, actualizarCantidadRecibida, actualizarProceso, fetchActualizarRevisionCantidad  } from '../Service'; // Importa funciones de servicio
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 
 const RevisionCantidad = () => {
@@ -51,6 +51,9 @@ const RevisionCantidad = () => {
   
       // Actualiza el proceso a 3
       await actualizarProceso(ordenSeleccionada, 3);
+  
+      // Actualiza la fecha y hora de cantidad
+      await fetchActualizarRevisionCantidad(ordenSeleccionada);
   
       alert("Revisión finalizada correctamente y proceso actualizado.");
     } catch (error) {

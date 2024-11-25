@@ -501,3 +501,201 @@ def ingreso_condiciones(cod_ordencompra):
         cursor.close()
         conn.close()
 
+
+def VerAlmacen(codigo_empleado, codigo_insumo):
+    # Obtener el cod_local del empleado
+    cod_local = get_local_empleado(codigo_empleado)
+    
+    if cod_local is None:
+        return "El empleado no tiene un local asignado."  # Manejo de caso cuando no se encuentra el local
+    
+    conn = get_db_connection()  # Asumiendo que esta función ya está definida para obtener conexión
+    cursor = conn.cursor()
+
+    try:
+        # Ejecutamos la consulta con los parámetros necesarios
+        cursor.execute("""
+            SELECT ta.nombre_tipo_almacen, a.cod_almacen, l.nombre_local 
+            FROM almacen a
+            INNER JOIN "local" l ON a.cod_local = l.cod_local
+            INNER JOIN tipo_almacen ta ON ta.cod_tipo_almacen = a.cod_tipo_almacen
+            INNER JOIN Compatibilidad c ON c.cod_tipo_almacen = ta.cod_tipo_almacen 
+            INNER JOIN condiciones co ON co.cod_condiciones = c.cod_condiciones
+            WHERE a.cod_local = %s
+            AND co.cod_condiciones = (
+                SELECT i.cod_condiciones
+                FROM insumo i
+                WHERE i.cod_insumo = %s
+            );
+        """, (cod_local, codigo_insumo))
+
+        # Obtener los resultados
+        resultados = cursor.fetchall()
+        
+        if not resultados:
+            return "No se encontraron resultados para la consulta."
+
+        # Devolver los resultados
+        return resultados
+
+    except Exception as e:
+        # Manejar posibles errores
+        return f"Error al ejecutar la consulta: {str(e)}"
+    
+    finally:
+        # Cerrar la conexión
+        cursor.close()
+        conn.close()
+
+
+
+
+def ingresar_stock(fechaven, cod_insumo, cod_ordencompra, cod_almacen):
+    conn = get_db_connection()  # Asegúrate de tener una función de conexión a tu base de datos
+    cursor = conn.cursor()
+
+    try:
+        # Ejecutar la nueva consulta de inserción con los parámetros proporcionados
+        cursor.execute("""
+            INSERT INTO stock (fecha_vencimiento, cantidad, cod_insumo, cod_proveedor, cod_almacen)
+            VALUES (%s,
+                    (SELECT r.cantidad_recibida FROM revision r WHERE r.cod_ordencompra = %s AND r.cod_insumo = %s),
+                    %s,
+                    (SELECT oc.cod_proveedor FROM orden_compra oc WHERE oc.cod_ordencompra = %s),
+                    %s);
+        """, (fechaven, cod_ordencompra, cod_insumo, cod_insumo, cod_ordencompra, cod_almacen))
+
+        # Confirmar la transacción
+        conn.commit()
+
+        return "Ingreso de stock realizado correctamente."
+
+    except Exception as e:
+        # Manejar posibles errores
+        return f"Error al ingresar stock: {str(e)}"
+
+    finally:
+        # Cerrar la conexión
+        cursor.close()
+        conn.close()
+
+
+
+def ingresar_movimiento(cod_ordencompra, cod_insumo, cod_empleado):
+    conn = get_db_connection()  # Asegúrate de tener una función de conexión a tu base de datos
+    cursor = conn.cursor()
+
+    try:
+        # Ejecutar la consulta de inserción con los parámetros proporcionados
+        cursor.execute("""
+            INSERT INTO movimiento (fecha_movimiento, cantidad_movimiento, fecha_fin, codigo_empleado, cod_stock, cod_tipomovimiento)
+            VALUES (
+                NOW(),
+                (SELECT r.cantidad_recibida FROM revision r WHERE r.cod_ordencompra = %s AND r.cod_insumo = %s),
+                NULL,
+                %s,
+                (SELECT MAX(cod_stock) FROM stock),
+                1  -- cod_tipomovimiento siempre será 1
+            );
+        """, (cod_ordencompra, cod_insumo, cod_empleado))
+
+        # Confirmar la transacción
+        conn.commit()
+
+        return "Ingreso de movimiento realizado correctamente."
+
+    except Exception as e:
+        # Manejar posibles errores
+        return f"Error al ingresar movimiento: {str(e)}"
+
+    finally:
+        # Cerrar la conexión
+        cursor.close()
+        conn.close()
+
+
+def actualizar_fin_ingreso():
+    conn = get_db_connection()  # Asegúrate de tener una función de conexión a tu base de datos
+    cursor = conn.cursor()
+
+    try:
+        # Ejecutar la consulta de actualización
+        cursor.execute("""
+            UPDATE movimiento
+            SET fecha_fin = NOW()
+            WHERE cod_movimiento = (
+                SELECT MAX(cod_movimiento)
+                FROM movimiento
+            );
+        """)
+
+        # Confirmar la transacción
+        conn.commit()
+
+        return "Fecha de fin actualizada correctamente."
+
+    except Exception as e:
+        # Manejar posibles errores
+        return f"Error al actualizar fecha de fin: {str(e)}"
+
+    finally:
+        # Cerrar la conexión
+        cursor.close()
+        conn.close()
+
+
+
+def actualizar_revision_calidad(cod_ordencompra):
+    conn = get_db_connection()  # Asegúrate de tener una función de conexión a tu base de datos
+    cursor = conn.cursor()
+
+    try:
+        # Ejecutar la consulta de actualización
+        cursor.execute("""
+            UPDATE Revision r
+            SET fechahora_calidad = NOW()
+            WHERE r.cod_ordencompra = %s;
+        """, (cod_ordencompra,))
+
+        # Confirmar la transacción
+        conn.commit()
+
+        return "Fecha y hora de calidad actualizada correctamente."
+
+    except Exception as e:
+        # Manejar posibles errores
+        return f"Error al actualizar fecha y hora de calidad: {str(e)}"
+
+    finally:
+        # Cerrar la conexión
+        cursor.close()
+        conn.close()
+
+
+
+
+def actualizar_revision_cantidad(cod_ordencompra):
+    conn = get_db_connection()  # Asegúrate de tener una función de conexión a tu base de datos
+    cursor = conn.cursor()
+
+    try:
+        # Ejecutar la consulta de actualización
+        cursor.execute("""
+            UPDATE Revision r
+            SET fechahora_cantidad = NOW()
+            WHERE r.cod_ordencompra = %s;
+        """, (cod_ordencompra,))
+
+        # Confirmar la transacción
+        conn.commit()
+
+        return "Fecha y hora de cantidad actualizada correctamente."
+
+    except Exception as e:
+        # Manejar posibles errores
+        return f"Error al actualizar fecha y hora de cantidad: {str(e)}"
+
+    finally:
+        # Cerrar la conexión
+        cursor.close()
+        conn.close()

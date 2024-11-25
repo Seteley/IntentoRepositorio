@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useOrden } from '../context/OrdenContext'; // Importar el hook del contexto de la orden
 import { fetchCondicionesIngreso } from '../Service'; // Importar la función del servicio
 import { InsumoContext } from '../context/InsumoContext'; // Importar el contexto de Insumo
+import { useNavigate } from 'react-router-dom'; // Importar useNavigate
 
 function IngresoInicio() {
   const { ordenSeleccionada, isLoading: loadingOrden } = useOrden(); // Obtener la orden desde el contexto
@@ -9,6 +10,8 @@ function IngresoInicio() {
   const [condiciones, setCondiciones] = useState([]); // Aquí se guardan los datos de las condiciones
   const [loading, setLoading] = useState(false); // Estado de carga
   const [error, setError] = useState(null); // Estado de error
+
+  const navigate = useNavigate(); // Usar useNavigate para redirigir
 
   // Función para manejar la solicitud de las condiciones
   const obtenerCondiciones = async () => {
@@ -38,7 +41,8 @@ function IngresoInicio() {
   // Función para manejar el clic en "Agregar Insumo"
   const manejarAgregarInsumo = (codInsumo) => {
     setInsumoSeleccionado(codInsumo); // Guardar el código del insumo en el contexto
-    alert(`Insumo con código ${codInsumo} agregado.`); // Para verificar, muestra un mensaje
+    alert(`Insumo con código ${codInsumo} agregado.`); // Mostrar un mensaje de confirmación
+    navigate('/modulo5/ingresoalmacen'); // Redirigir a la página de ingreso al almacén
   };
 
   useEffect(() => {

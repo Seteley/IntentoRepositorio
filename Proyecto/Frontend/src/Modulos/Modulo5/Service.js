@@ -293,3 +293,172 @@ export const fetchCondicionesIngreso = async (cod_ordencompra) => {
     throw error; // Rethrow para manejar el error en el frontend
   }
 };
+
+
+
+export const fetchAlmacenes = async (codigo_empleado, codigo_insumo) => {
+  try {
+    const response = await fetch(`${API_URL}/ver_almacen`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ codigo_empleado, codigo_insumo }), // Enviamos los parámetros en el cuerpo
+    });
+
+    // Verificar si la respuesta fue exitosa
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Error al obtener los almacenes.");
+    }
+
+    const data = await response.json();
+    // Asegurarse de que la respuesta tiene el formato esperado
+    return data.resultados || []; // Retornamos los resultados si existen
+  } catch (error) {
+    console.error("Error en fetchAlmacenes:", error);
+    throw error; // Re-lanzamos el error para manejarlo en el frontend
+  }
+};
+
+
+
+export const fetchIngresarStock = async (fechaven, cod_insumo, cod_ordencompra, cod_almacen) => {
+  try {
+    // Enviar la solicitud POST al backend con los parámetros necesarios
+    const response = await fetch(`${API_URL}/ingresar_stock`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fechaven,
+        cod_insumo,
+        cod_ordencompra,
+        cod_almacen
+      }), // Enviamos los parámetros en el cuerpo de la solicitud
+    });
+
+    // Verificar si la respuesta fue exitosa
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Error al ingresar el stock.");
+    }
+
+    // Si la respuesta fue exitosa, obtener los datos y devolver el mensaje
+    const data = await response.json();
+    return data.mensaje || "Ingreso de stock exitoso."; // Retornar el mensaje de éxito
+  } catch (error) {
+    console.error("Error en fetchIngresarStock:", error);
+    throw error; // Re-lanzamos el error para manejarlo en el frontend
+  }
+};
+
+
+export const fetchInsertarMovimiento = async (cod_ordencompra, cod_insumo, cod_empleado) => {
+  try {
+    const response = await fetch(`${API_URL}/ingresar_movimiento`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        cod_ordencompra,
+        cod_insumo,
+        cod_empleado, // ya no se pasa cod_tipomovimiento
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Error data:", errorData);  // Imprime el error completo
+      throw new Error(errorData.error || "Error al ingresar el movimiento.");
+    }
+
+    // Obtener los datos de la respuesta
+    const data = await response.json();
+    console.log("Data response:", data);  // Imprime la respuesta completa
+
+    return data.mensaje || "Movimiento registrado correctamente.";
+  } catch (error) {
+    console.error("Error en fetchInsertarMovimiento:", error);
+    throw error;
+  }
+};
+
+
+
+export const fetchActualizarFinIngreso = async () => {
+  try {
+    const response = await fetch(`${API_URL}/actualizar-fin-ingreso`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    // Verificar si la respuesta fue exitosa
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Error al actualizar la fecha de fin.");
+    }
+
+    const data = await response.json();
+    return data.mensaje || "Fecha de fin actualizada correctamente.";
+  } catch (error) {
+    console.error("Error en fetchActualizarFinIngreso:", error);
+    throw error;
+  }
+};
+
+
+export const fetchActualizarRevisionCalidad = async (cod_ordencompra) => {
+  try {
+    // Hacer la solicitud a la API con el 'cod_ordencompra' en el cuerpo de la solicitud
+    const response = await fetch(`${API_URL}/actualizar-revision-calidad`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ cod_ordencompra }), // Pasamos el 'cod_ordencompra' en el cuerpo de la solicitud
+    });
+
+    // Verificar si la respuesta fue exitosa
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Error al actualizar la fecha y hora de calidad.");
+    }
+
+    const data = await response.json();
+    return data.mensaje || "Fecha y hora de calidad actualizada correctamente.";
+  } catch (error) {
+    console.error("Error en fetchActualizarRevisionCalidad:", error);
+    throw error;
+  }
+};
+
+
+export const fetchActualizarRevisionCantidad = async (cod_ordencompra) => {
+  try {
+    // Hacer la solicitud a la API con el 'cod_ordencompra' en el cuerpo de la solicitud
+    const response = await fetch(`${API_URL}/actualizar-revision-cantidad`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ cod_ordencompra }), // Pasamos el 'cod_ordencompra' en el cuerpo de la solicitud
+    });
+
+    // Verificar si la respuesta fue exitosa
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Error al actualizar la fecha y hora de cantidad.");
+    }
+
+    const data = await response.json();
+    return data.mensaje || "Fecha y hora de cantidad actualizada correctamente.";
+  } catch (error) {
+    console.error("Error en fetchActualizarRevisionCantidad:", error);
+    throw error;
+  }
+};

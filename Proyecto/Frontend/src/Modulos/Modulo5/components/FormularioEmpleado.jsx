@@ -1,9 +1,10 @@
 import React, { useState, useContext } from "react";
 import { EmpleadoContext } from "../context/EmpleadoContext";
 import { useNavigate } from "react-router-dom";
+import "../styles/FormularioEmpleado.css"; // Asegúrate de importar el archivo CSS
 
 const FormularioEmpleado = () => {
-  const { setEmpleado } = useContext(EmpleadoContext); // Confirma que EmpleadoContext esté cargado correctamente
+  const { setEmpleado } = useContext(EmpleadoContext);
   const [codigo, setCodigo] = useState("");
   const navigate = useNavigate();
 
@@ -14,7 +15,7 @@ const FormularioEmpleado = () => {
   };
 
   return (
-    <div>
+    <div className="formulario-empleado">
       <h2>Ingrese su código de empleado</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -31,3 +32,4 @@ const FormularioEmpleado = () => {
 };
 
 export default FormularioEmpleado;
+

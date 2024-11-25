@@ -12,6 +12,7 @@ import RevisionCantidad from './components/RevisionCantidad';
 import RevisionCalidad from './components/RevisionCalidad'; // Importar el nuevo componente para revisión de calidad
 import Revisiones from './components/Revisiones'; // Importar el nuevo componente para revisión de calidad
 import IngresoInicio from './components/IngresoInicio';
+import IngresoAlmacen from './components/IngresoAlmacen';
 
 
 
@@ -38,7 +39,7 @@ const App = () => {
           <Route path="/revisioncalidad" element={<RevisionCalidad />} />
           <Route path="/revisiones" element={<Revisiones />} /> // Nueva ruta
           <Route path="/ingresoinicio" element={<IngresoInicio />} />
-
+          <Route path="/ingresoalmacen" element={<IngresoAlmacen />} />
 
 
         </Routes>

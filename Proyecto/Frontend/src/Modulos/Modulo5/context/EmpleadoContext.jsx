@@ -15,7 +15,7 @@ export const EmpleadoProvider = ({ children }) => {
     }
   }, []);
 
-  // Guardar el código de empleado en localStorage cuando se actualiza
+  // Guardar el valor del empleado en localStorage cuando se actualiza
   useEffect(() => {
     if (empleado) {
       localStorage.setItem("empleado", empleado); // Guarda el valor en localStorage
