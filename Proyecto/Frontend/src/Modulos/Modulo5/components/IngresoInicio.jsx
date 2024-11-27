@@ -55,6 +55,11 @@ function IngresoInicio() {
     navigate('/modulo5/ingresoalmacen');
   };
 
+  const manejarVolverModulo = () => {
+    // Redirige a la ruta deseada (por ejemplo, a la ruta del módulo anterior)
+    navigate('/modulo5/Inicio');  // Cambia la ruta según lo que necesites
+  };
+
   useEffect(() => {
     if (ordenSeleccionada) {
       obtenerCondiciones();
@@ -107,9 +112,15 @@ function IngresoInicio() {
           </table>
         </div>
       )}
+
+      {/* Botón para volver al módulo */}
+      <div className={styles.buttonContainer}>
+        <button className={styles.addButton} onClick={manejarVolverModulo}>
+          Volver al módulo
+        </button>
+      </div>
     </div>
   );
 }
 
 export default IngresoInicio;
-
