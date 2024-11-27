@@ -80,13 +80,24 @@ def get_available_staff(day, shift, position):
     try:
         cursor.execute(
             """
-        SELECT e.dni, e.name, e.last_name
-        FROM employee e
-        WHERE e.position = %s
-        AND e.id NOT IN (
-            SELECT s.employee_id
-            FROM shift s
-            WHERE s.day = %s AND s.shift_type = %s
+        SELECT 
+                        e.DNI,
+                        e.Primer_apellido
+                    FROM 
+                        Empleado e
+                    JOIN 
+                        Horario_libre hl ON e.Codigo_empleado = hl.Codigo_empleado
+                    JOIN 
+                        Horario_libre_Dias hld ON hl.Cod_horario = hld.Cod_horario
+                    JOIN 
+                        Turno t ON t.Cod_turno = (SELECT cod_turno FROM TURNO WHERE nombre_turno=%s)
+                    JOIN 
+                        Cargo c ON e.Cod_cargo = c.Cod_cargo
+                    WHERE 
+                        hld.Dias = %s AND                     
+                        c.Nombre_cargo = %s AND              
+                        hl.Hora_inicio <= t.Hora_inicio AND      
+                        hl.Hora_fin >= t.Hora_fin; 
         )
         """,
             (position, day, shift),

@@ -20,6 +20,7 @@ from .models import (
 
 from .models import get_all_insumos, get_all_condiciones, get_all_unidades, get_local_empleado, get_ordencompra_mismodia, ver_contenido_orden_compra, get_empleado_supervisor, insertar_revision, actualizar_proceso_orden, obtener_detalles_revision, mostrar_cantidades, actualizar_cantidad_recibida, valorescalidad, mostrar_calidades, actualizar_revision, ingreso_condiciones, VerAlmacen, ingresar_stock, ingresar_movimiento, actualizar_fin_ingreso, actualizar_revision_calidad, actualizar_revision_cantidad
 
+from .models import get_available_staff
 
 import logging
 
@@ -108,7 +109,7 @@ def available_staff():
     day = request.args.get("day")
     shift = request.args.get("shift")
     position = request.args.get("position")
-    staff = models.get_available_staff(day, shift, position)
+    staff = get_available_staff(day, shift, position)
     return jsonify([{"dni": s[0], "name": s[1], "last_name": s[2]} for s in staff])
 
 

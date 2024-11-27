@@ -67,11 +67,8 @@ export default function StaffDemand() {
     setLoading(true);
     setError(null);
     try {
-      const result = await postToAPI('/staff-demand', {
-        day: selectedDay,
-        shift: selectedShift,
-        position: selectedPosition
-      });
+      // Enviar los datos a la URL como parámetros GET
+      const result = await fetchFromAPI(`/staff-demand?day=${selectedDay}&shift=${selectedShift}&position=${selectedPosition}`);
       console.log('Resultado de la búsqueda:', result);
     } catch (error) {
       console.error('Error al buscar:', error);
@@ -85,51 +82,54 @@ export default function StaffDemand() {
     <div className="space-y-4 p-4 bg-white rounded-lg shadow">
       <h2 className="text-xl font-semibold text-gray-800">Demanda de personal</h2>
       <div className="space-y-4">
+      <div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">Días</label>
+  <Select value={selectedDay} onValueChange={setSelectedDay}>
+    <SelectTrigger className="w-full" style={selectStyles.trigger}>
+      <SelectValue placeholder="Seleccione día" />
+    </SelectTrigger>
+    <SelectContent style={selectStyles.content}>
+      {days.map((day, index) => (
+        <SelectItem key={index} value={day.nombre} style={selectStyles.item}>
+          {day.nombre}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+</div>
+
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">Turno</label>
+  <Select value={selectedShift} onValueChange={setSelectedShift}>
+    <SelectTrigger className="w-full" style={selectStyles.trigger}>
+      <SelectValue placeholder="Seleccione turno" />
+    </SelectTrigger>
+    <SelectContent style={selectStyles.content}>
+      {shifts.map((shift, index) => (
+        <SelectItem key={index} value={shift.nombre_turno} style={selectStyles.item}>
+          {shift.nombre_turno}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+</div>
+
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Días</label>
-          <Select value={selectedDay} onValueChange={setSelectedDay}>
-            <SelectTrigger className="w-full" style={selectStyles.trigger}>
-              <SelectValue placeholder="Seleccione día" />
-            </SelectTrigger>
-            <SelectContent style={selectStyles.content}>
-              {days.map((day) => (
-                <SelectItem key={day.value} value={day.value} style={selectStyles.item}>
-                  {day.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Turno</label>
-          <Select value={selectedShift} onValueChange={setSelectedShift}>
-            <SelectTrigger className="w-full" style={selectStyles.trigger}>
-              <SelectValue placeholder="Seleccione turno" />
-            </SelectTrigger>
-            <SelectContent style={selectStyles.content}>
-              {shifts.map((shift) => (
-                <SelectItem key={shift.value} value={shift.value} style={selectStyles.item}>
-                  {shift.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Cargo</label>
-          <Select value={selectedPosition} onValueChange={setSelectedPosition}>
-            <SelectTrigger className="w-full" style={selectStyles.trigger}>
-              <SelectValue placeholder="Seleccione cargo" />
-            </SelectTrigger>
-            <SelectContent style={selectStyles.content}>
-              {positions.map((position) => (
-                <SelectItem key={position.value} value={position.value} style={selectStyles.item}>
-                  {position.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">Cargo</label>
+  <Select value={selectedPosition} onValueChange={setSelectedPosition}>
+    <SelectTrigger className="w-full" style={selectStyles.trigger}>
+      <SelectValue placeholder="Seleccione cargo" />
+    </SelectTrigger>
+    <SelectContent style={selectStyles.content}>
+      {positions.map((position, index) => (
+        <SelectItem key={index} value={position.nombre_cargo} style={selectStyles.item}>
+          {position.nombre_cargo}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+</div>
+
       </div>
       <Button 
         className="w-full bg-blue-500 hover:bg-blue-600 text-white"
