@@ -1,0 +1,82 @@
+.auth-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-background {
+  width: 100%;
+  height: 100%;
+  background-image: url('../../public/Images/fondo.JPG'); /* Nota: cambia la ruta */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+
+.auth-form {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+
+input {
+  width: 100%;
+  height: 40px;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 0 auto;
+}
+
+button {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  border-radius: 5px;
+  border: none;
+  background-color: #a8d8d8;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #8dc8c8;
+}
+
+button.submit {
+  background-color: #4CAF50;
+  color: white;
+}
+
+button.clear {
+  background-color: #f44336;
+  color: white;
+}
+
+.success {
+  color: #4CAF50;
+  margin-top: 10px;
+}
+
+.error {
+  color: #f44336;
+  margin-top: 10px;
+}

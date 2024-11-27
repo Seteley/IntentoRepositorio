@@ -1,0 +1,111 @@
+.summary-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1rem;
+    font-family: Arial, sans-serif;
+  }
+  
+  .summary-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mesero-info {
+    margin-bottom: 1.5rem;
+  }
+  
+  .mesero-info h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .summary-content h1 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .summary-items {
+    margin-bottom: 1.5rem;
+  }
+  
+  .summary-item {
+    margin-bottom: 1rem;
+  }
+  
+  .item-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .item-name {
+    flex: 2;
+  }
+  
+  .item-quantity {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .item-price {
+    flex: 1;
+    text-align: right;
+  }
+  
+  .summary-total {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+    font-weight: bold;
+  }
+  
+  .mesa-info {
+    text-align: right;
+    margin-top: 1.5rem;
+  }
+  
+  .mesa-numero {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border: 1px solid #000;
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+  }
+  
+  .summary-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .btn-modificar, .btn-confirmar {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  
+  .btn-modificar {
+    background-color: #d1d5db;
+    color: #000;
+  }
+  
+  .btn-confirmar {
+    background-color: #7c937c;
+    color: white;
+  }
+  
+  .btn-modificar:hover {
+    background-color: #9ca3af;
+  }
+  
+  .btn-confirmar:hover {
+    background-color: #5f715f;
+  }

@@ -23,7 +23,6 @@ const App = () => {
       <OrdenProvider>
       <InsumoProvider>
       <div>
-        <h1>Módulo 5</h1>
         <Routes>
           {/* Ruta para el formulario de código de empleado */}
           <Route path="/" element={<FormularioEmpleado />} />

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { fetchCalidades, fetchValoresCalidad, actualizarRevision, actualizarProceso, fetchActualizarRevisionCalidad } from "../Service"; // Importar la nueva función fetchActualizarRevisionCalidad
+import { fetchCalidades, fetchValoresCalidad, actualizarRevision, actualizarProceso, fetchActualizarRevisionCalidad } from "../Service";
 import { useOrden } from "../context/OrdenContext"; 
 import { useNavigate } from 'react-router-dom'; 
+import styles from "../styles//RevisionCalidad.module.css";
 
 function RevisionCalidad() {
   const { ordenSeleccionada, isLoading: loadingOrden } = useOrden();
@@ -74,12 +75,10 @@ function RevisionCalidad() {
         }
       }
 
-      // Actualizar el proceso a 4
       await actualizarProceso(ordenSeleccionada, 4);
 
-      // Aquí llamamos a la función que se encargará de actualizar la fecha y hora de calidad
       const resultado = await fetchActualizarRevisionCalidad(ordenSeleccionada);
-      console.log(resultado); // Si quieres ver el mensaje en consola
+      console.log(resultado);
 
       alert("Revisión terminada y proceso actualizado.");
     } catch (err) {
@@ -90,67 +89,83 @@ function RevisionCalidad() {
     }
   };
 
-  if (loadingOrden) return <p>Cargando orden...</p>;
-  if (!ordenSeleccionada) return <p>No hay una orden seleccionada.</p>;
-  if (loading) return <p>Cargando datos de calidad...</p>;
-  if (error) return <p>{error}</p>;
+  if (loadingOrden) return <p className={styles.noOrdersMessage}>Cargando orden...</p>;
+  if (!ordenSeleccionada) return <p className={styles.noOrdersMessage}>No hay una orden seleccionada.</p>;
+  if (loading) return <p className={styles.noOrdersMessage}>Cargando datos de calidad...</p>;
+  if (error) return <p className={styles.errorMessage}>{error}</p>;
 
   return (
-    <div>
-      <h1>Revisión de Calidad</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Revisión de Calidad</h1>
       {calidades.length === 0 ? (
-        <p>No se encontraron datos de calidad para esta orden de compra.</p>
+        <p className={styles.noOrdersMessage}>No se encontraron datos de calidad para esta orden de compra.</p>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Código Insumo</th>
-              <th>Nombre Insumo</th>
-              <th>Acción</th>
-              <th>Comentario</th>
-            </tr>
-          </thead>
-          <tbody>
-            {calidades.map((calidad, index) => (
-              <tr key={index}>
-                <td>{calidad.cod_insumo}</td>
-                <td>{calidad.nombre_insumo}</td>
-                <td>
-                  <select
-                    value={calidad.estado_calidad || ""}
-                    onChange={(e) => {
-                      const updatedCalidades = [...calidades];
-                      updatedCalidades[index].estado_calidad = e.target.value;
-                      setCalidades(updatedCalidades);
-                    }}
-                  >
-                    <option value="">Seleccionar...</option>
-                    {valoresCalidad.map((valor, idx) => (
-                      <option key={idx} value={valor.estado}>
-                        {valor.estado}
-                      </option>
-                    ))}
-                  </select>
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    value={calidad.comentario || ""}
-                    onChange={(e) => handleEditableChange(index, e.target.value)}
-                    placeholder="Añadir comentario"
-                  />
-                </td>
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <thead className={styles.tableHead}>
+              <tr>
+                <th>Código Insumo</th>
+                <th>Nombre Insumo</th>
+                <th>Acción</th>
+                <th>Comentario</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {calidades.map((calidad, index) => (
+                <tr key={index}>
+                  <td>{calidad.cod_insumo}</td>
+                  <td>{calidad.nombre_insumo}</td>
+                  <td>
+                    <select
+                      className={styles.select}
+                      value={calidad.estado_calidad || ""}
+                      onChange={(e) => {
+                        const updatedCalidades = [...calidades];
+                        updatedCalidades[index].estado_calidad = e.target.value;
+                        setCalidades(updatedCalidades);
+                      }}
+                    >
+                      <option value="">Seleccionar...</option>
+                      {valoresCalidad.map((valor, idx) => (
+                        <option key={idx} value={valor.estado}>
+                          {valor.estado}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      className={styles.input}
+                      type="text"
+                      value={calidad.comentario || ""}
+                      onChange={(e) => handleEditableChange(index, e.target.value)}
+                      placeholder="Añadir descripción"
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
-      <button onClick={handleTerminarRevision} disabled={loading}>
-        {loading ? "Cargando..." : "Terminar revisión"}
-      </button>
-      <button onClick={() => navigate("/modulo5/revisiones")}>Ver revisiones</button>
+      <div className={styles.buttonContainer}>
+        <button 
+          className={styles.button} 
+          onClick={handleTerminarRevision} 
+          disabled={loading}
+        >
+          {loading ? "Cargando..." : "Terminar revisión"}
+        </button>
+        <button 
+          className={`${styles.button} ${styles.nextButton}`} 
+          onClick={() => navigate("/modulo5/revisiones")}
+        >
+          Ver revisiones
+        </button>
+      </div>
     </div>
   );
 }
 
 export default RevisionCalidad;
+

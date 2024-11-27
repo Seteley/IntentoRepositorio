@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useOrden } from "../context/OrdenContext"; // Importamos el hook del contexto
-import { fetchDetallesRevision, actualizarProceso } from "../Service"; // Importamos las funciones necesarias
-import { useNavigate } from "react-router-dom"; // Importar useNavigate
+import { useOrden } from "../context/OrdenContext";
+import { fetchDetallesRevision, actualizarProceso } from "../Service";
+import { useNavigate } from "react-router-dom";
+import styles from "../styles/Revisiones.module.css";
 
 function Revisiones() {
   const { ordenSeleccionada, isLoading: loadingOrden } = useOrden();
@@ -49,51 +50,55 @@ function Revisiones() {
     }
   };
 
-  if (loadingOrden) return <p>Cargando orden...</p>;
-  if (!ordenSeleccionada) return <p>No hay una orden seleccionada.</p>;
-  if (loading) return <p>Cargando detalles de la revisión...</p>;
-  if (error) return <p>{error}</p>;
+  if (loadingOrden) return <p className={styles.noContentMessage}>Cargando orden...</p>;
+  if (!ordenSeleccionada) return <p className={styles.noContentMessage}>No hay una orden seleccionada.</p>;
+  if (loading) return <p className={styles.noContentMessage}>Cargando detalles de la revisión...</p>;
+  if (error) return <p className={styles.errorMessage}>{error}</p>;
 
   return (
-    <div>
-      <h1>Detalles de Revisión</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Detalles de Revisión</h1>
       {detallesRevision.length === 0 ? (
-        <p>No se encontraron detalles de revisión para esta orden de compra.</p>
+        <p className={styles.noContentMessage}>No se encontraron detalles de revisión para esta orden de compra.</p>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Código Insumo</th>
-              <th>Nombre Insumo</th>
-              <th>Cantidad Compra</th>
-              <th>Cantidad Recibida</th>
-              <th>Estado Calidad</th>
-              <th>Descripción</th>
-            </tr>
-          </thead>
-          <tbody>
-            {detallesRevision.map((detalle, index) => (
-              <tr key={index}>
-                <td>{detalle.cod_insumo}</td>
-                <td>{detalle.nombre_insumo}</td>
-                <td>{detalle.cantidad_compra}</td>
-                <td>{detalle.cantidad_recibida}</td>
-                <td>{detalle.estado}</td>
-                <td>{detalle.descripcion}</td>
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <thead className={styles.tableHead}>
+              <tr>
+                <th>Código Insumo</th>
+                <th>Nombre Insumo</th>
+                <th>Cantidad Compra</th>
+                <th>Cantidad Recibida</th>
+                <th>Estado Calidad</th>
+                <th>Descripción</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {detallesRevision.map((detalle, index) => (
+                <tr key={index}>
+                  <td>{detalle.cod_insumo}</td>
+                  <td>{detalle.nombre_insumo}</td>
+                  <td>{detalle.cantidad_compra}</td>
+                  <td>{detalle.cantidad_recibida}</td>
+                  <td>{detalle.estado}</td>
+                  <td>{detalle.descripcion}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
-      <div>
+      <div className={styles.buttonContainer}>
         <button
+          className={`${styles.button} ${styles.acceptButton}`}
           onClick={() => actualizarCodProceso(5)}
           disabled={loading}
         >
           {loading ? "Procesando..." : "Aceptar pedido"}
         </button>
         <button
+          className={`${styles.button} ${styles.rejectButton}`}
           onClick={() => actualizarCodProceso(6)}
           disabled={loading}
         >
@@ -105,3 +110,4 @@ function Revisiones() {
 }
 
 export default Revisiones;
+

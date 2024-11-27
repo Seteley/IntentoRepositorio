@@ -1,27 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { useContext } from "react";
-import { EmpleadoContext } from "../context/EmpleadoContext"; // Importamos el contexto
-import { OrdenContext } from "../context/OrdenContext"; // Importamos el contexto de Orden
-import { fetchSupervisores, crearRevision, actualizarProceso } from "../Service"; // Importamos la función actualizada
-import { useNavigate } from 'react-router-dom'; // Importamos useNavigate
+import React, { useState, useEffect, useContext } from "react";
+import { EmpleadoContext } from "../context/EmpleadoContext";
+import { OrdenContext } from "../context/OrdenContext";
+import { fetchSupervisores, crearRevision, actualizarProceso } from "../Service";
+import { useNavigate } from 'react-router-dom';
+import styles from "../styles/AsignarSupervisores.module.css";
 
 const AsignarSupervisores = () => {
-  const { empleado } = useContext(EmpleadoContext); // Usamos el contexto para obtener el código del empleado
-  const { ordenSeleccionada } = useContext(OrdenContext); // Usamos el contexto para obtener el código de la orden
+  const { empleado } = useContext(EmpleadoContext);
+  const { ordenSeleccionada } = useContext(OrdenContext);
   const [supervisores, setSupervisores] = useState([]);
   const [error, setError] = useState(null);
   const [codSupCantidad, setCodSupCantidad] = useState(null);
   const [codSupCalidad, setCodSupCalidad] = useState(null);
 
-  const navigate = useNavigate(); // Definimos la función navigate para redirigir
+  const navigate = useNavigate();
 
-  // Usamos useEffect para hacer la solicitud al backend solo si empleado tiene valor
   useEffect(() => {
     if (empleado) {
       const fetchSupervisoresData = async () => {
         try {
-          const data = await fetchSupervisores(empleado); // Usamos el código de empleado obtenido del contexto
-          setSupervisores(data); // Guardamos los supervisores obtenidos
+          const data = await fetchSupervisores(empleado);
+          setSupervisores(data);
         } catch (err) {
           setError("No se pudo cargar los supervisores.");
           console.error(err);
@@ -30,7 +29,7 @@ const AsignarSupervisores = () => {
 
       fetchSupervisoresData();
     }
-  }, [empleado]); // Dependemos de empleado para hacer la llamada solo cuando cambia
+  }, [empleado]);
 
   const handleRevisiónClick = async () => {
     if (!codSupCantidad || !codSupCalidad || !ordenSeleccionada) {
@@ -39,18 +38,15 @@ const AsignarSupervisores = () => {
     }
 
     try {
-      // Primero, actualizar el proceso de la orden a la etapa deseada (por ejemplo, 2)
-      const codProceso = 2; // Etapa del proceso
+      const codProceso = 2;
       const responseProceso = await actualizarProceso(ordenSeleccionada, codProceso);
 
       if (responseProceso.message) {
         console.log("Proceso actualizado exitosamente:", responseProceso.message);
 
-        // Luego, crear la revisión
         const responseRevision = await crearRevision(ordenSeleccionada, codSupCantidad, codSupCalidad);
         console.log("Revisión creada exitosamente:", responseRevision);
 
-        // Redirigir a la página de RevisionCantidad
         navigate('/modulo5/revisioncantidad');
       } else {
         setError("No se pudo actualizar el proceso de la orden.");
@@ -62,86 +58,92 @@ const AsignarSupervisores = () => {
   };
 
   return (
-    <div>
-      <h2>Asignar Supervisores</h2>
-      {error && <p>{error}</p>}
+    <div className={styles.container}>
+      <h2 className={styles.title}>Asignar Supervisores</h2>
+      {error && <p className={styles.errorMessage}>{error}</p>}
 
       <div>
-        <h3>Revisión de cantidad:</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Código empleado</th>
-              <th>Nombre empleado</th>
-              <th>Seleccionar</th>
-            </tr>
-          </thead>
-          <tbody>
-            {supervisores.length > 0 ? (
-              supervisores.map((supervisor) => (
-                <tr key={supervisor.codigo_empleado}>
-                  <td>{supervisor.codigo_empleado}</td>
-                  <td>{supervisor.Nombre}</td>
-                  <td>
-                    <input
-                      type="radio"
-                      name="revisiónCantidad"
-                      value={supervisor.codigo_empleado}
-                      onChange={() => setCodSupCantidad(supervisor.codigo_empleado)}
-                    />
-                  </td>
-                </tr>
-              ))
-            ) : (
+        <h3 className={styles.subtitle}>Revisión de cantidad:</h3>
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <thead className={styles.tableHead}>
               <tr>
-                <td colSpan="3">No hay supervisores disponibles.</td>
+                <th>Código empleado</th>
+                <th>Nombre empleado</th>
+                <th>Seleccionar</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {supervisores.length > 0 ? (
+                supervisores.map((supervisor) => (
+                  <tr key={supervisor.codigo_empleado} className={codSupCantidad === supervisor.codigo_empleado ? styles.selectedRow : ''}>
+                    <td>{supervisor.codigo_empleado}</td>
+                    <td>{supervisor.Nombre}</td>
+                    <td>
+                      <input
+                        type="radio"
+                        name="revisiónCantidad"
+                        value={supervisor.codigo_empleado}
+                        onChange={() => setCodSupCantidad(supervisor.codigo_empleado)}
+                        className={styles.radioInput}
+                      />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3">No hay supervisores disponibles.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div>
-        <h3>Revisión de calidad:</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Código empleado</th>
-              <th>Nombre empleado</th>
-              <th>Seleccionar</th>
-            </tr>
-          </thead>
-          <tbody>
-            {supervisores.length > 0 ? (
-              supervisores.map((supervisor) => (
-                <tr key={supervisor.codigo_empleado}>
-                  <td>{supervisor.codigo_empleado}</td>
-                  <td>{supervisor.Nombre}</td>
-                  <td>
-                    <input
-                      type="radio"
-                      name="revisiónCalidad"
-                      value={supervisor.codigo_empleado}
-                      onChange={() => setCodSupCalidad(supervisor.codigo_empleado)}
-                    />
-                  </td>
-                </tr>
-              ))
-            ) : (
+        <h3 className={styles.subtitle}>Revisión de calidad:</h3>
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <thead className={styles.tableHead}>
               <tr>
-                <td colSpan="3">No hay supervisores disponibles.</td>
+                <th>Código empleado</th>
+                <th>Nombre empleado</th>
+                <th>Seleccionar</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {supervisores.length > 0 ? (
+                supervisores.map((supervisor) => (
+                  <tr key={supervisor.codigo_empleado} className={codSupCalidad === supervisor.codigo_empleado ? styles.selectedRow : ''}>
+                    <td>{supervisor.codigo_empleado}</td>
+                    <td>{supervisor.Nombre}</td>
+                    <td>
+                      <input
+                        type="radio"
+                        name="revisiónCalidad"
+                        value={supervisor.codigo_empleado}
+                        onChange={() => setCodSupCalidad(supervisor.codigo_empleado)}
+                        className={styles.radioInput}
+                      />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3">No hay supervisores disponibles.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {/* Botón Iniciar Revisión */}
-      <div>
-        <button onClick={handleRevisiónClick}>Iniciar Revisión</button>
+      <div className={styles.buttonContainer}>
+        <button className={styles.button} onClick={handleRevisiónClick}>Iniciar Revisión</button>
       </div>
     </div>
   );
 };
 
 export default AsignarSupervisores;
+

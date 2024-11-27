@@ -1,0 +1,59 @@
+:root { --turquoise: 
+  #40E0D0; --red: 
+  #FF3B30; --white: 
+  #FFFFFF; --dark-gray: 
+  #333333; --yellow: 
+  #FFD700; --light-gray: 
+  #F5F5F5; }
+  
+  .orden-mismo-dia-container { max-width: 1200px; margin: 0 auto; padding: 2rem; font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; }
+  
+  h2 { font-size: 2rem; color: var(--dark-gray); margin-bottom: 1.5rem; text-align: center; }
+  
+  .error-message, .no-orders-message { color: var(--red); text-align: center; font-size: 1.1rem; margin-top: 1rem; }
+  
+  .table-container { overflow-x: auto; margin-bottom: 1.5rem; }
+  
+  table { width: 100%; border-collapse: collapse; background-color: var(--white); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+  
+  thead { background-color: var(--yellow) !important; /* Añadir !important para asegurarse de que se aplica */ }
+  
+  th, td { padding: 0.5rem 1rem; /* Reducido el padding para hacer las filas más chatas / text-align: left; border-bottom: 1px solid #ddd; line-height: 1.2; / Ajuste de line-height para reducir la altura de las filas */ }
+  
+  th { font-weight: bold; color: var(--dark-gray); }
+  
+  tr:nth-child(even) { background-color: var(--light-gray); }
+  
+  .selected-row { background-color: var(--turquoise) !important; color: var(--white); }
+  
+  input[type="radio"] { cursor: pointer; transform: scale(0.8); }
+  
+  .button-container { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  
+  .select-button { width: 100%; max-width: 300px; padding: 0.8rem; font-size: 1rem; color: var(--white); background-color: var(--red); border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-weight: 500; }
+  
+  .select-button:hover { background-color: 
+  #FF574D; }
+  
+  .select-button:active { transform: translateY(1px); }
+  
+  .back-button { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.8rem 1.2rem; font-size: 1rem; color: var(--white); background-color: var(--dark-gray); border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; width: 100%; max-width: 300px; }
+  
+  .back-button:hover { background-color: 
+  #555555; }
+  
+  .back-button .icon { width: 20px; height: 20px; color: var(--white); }
+  
+  @media (max-width: 768px) { .orden-mismo-dia-container { padding: 1rem; }
+  
+  h2 { font-size: 1.5rem; }
+  
+  th, td { padding: 0.6rem 1rem; /* Ajuste también en dispositivos móviles */ }
+  
+  .select-button, .back-button { font-size: 0.9rem; padding: 0.7rem 1rem; } }
+  
+  @media (max-width: 480px) { h2 { font-size: 1.25rem; }
+  
+  th, td { padding: 0.5rem 0.8rem; /* Ajuste para pantallas pequeñas */ }
+  
+  .select-button, .back-button { font-size: 0.8rem; padding: 0.6rem 0.8rem; } }

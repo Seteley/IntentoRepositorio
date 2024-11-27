@@ -1,0 +1,56 @@
+.container {
+  text-align: center;
+  margin: 20px;
+}
+
+.mesa-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.mesa {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.mesa.ocupada {
+  background-color: lightgray;
+  cursor: not-allowed;
+}
+
+.mesa.seleccionada {
+  border: 2px solid green;
+}
+
+.icono-ocupada {
+  font-size: 1.2em;
+  color: red;
+  margin-left: 5px;
+}
+
+.icono-seleccionada {
+  font-size: 1.2em;
+  color: green;
+  margin-left: 5px;
+}
+
+.btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.btn.nueva-mesa {
+  background-color: green;
+  color: white;
+}
+
+.btn.salir {
+  background-color: red;
+  color: white;
+}

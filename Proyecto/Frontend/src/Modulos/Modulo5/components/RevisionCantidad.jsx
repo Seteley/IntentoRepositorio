@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useOrden } from '../context/OrdenContext'; // Importa el contexto
-import { fetchCantidades, actualizarCantidadRecibida, actualizarProceso, fetchActualizarRevisionCantidad  } from '../Service'; // Importa funciones de servicio
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useOrden } from '../context/OrdenContext';
+import { fetchCantidades, actualizarCantidadRecibida, actualizarProceso, fetchActualizarRevisionCantidad } from '../Service';
+import { useNavigate } from 'react-router-dom';
+import styles from '../styles/RevisionCantidad.module.css';
 
 const RevisionCantidad = () => {
-  const { ordenSeleccionada } = useOrden(); // Obtiene la orden seleccionada del contexto
+  const { ordenSeleccionada } = useOrden();
   const [cantidades, setCantidades] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // Usamos useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Espera a que ordenSeleccionada se defina antes de continuar
     if (ordenSeleccionada === null) {
       setLoading(false);
       return;
@@ -40,7 +40,6 @@ const RevisionCantidad = () => {
 
   const handleTerminarRevision = async () => {
     try {
-      // Actualiza las cantidades recibidas
       for (const item of cantidades) {
         await actualizarCantidadRecibida(
           ordenSeleccionada,
@@ -49,10 +48,7 @@ const RevisionCantidad = () => {
         );
       }
   
-      // Actualiza el proceso a 3
       await actualizarProceso(ordenSeleccionada, 3);
-  
-      // Actualiza la fecha y hora de cantidad
       await fetchActualizarRevisionCantidad(ordenSeleccionada);
   
       alert("Revisión finalizada correctamente y proceso actualizado.");
@@ -61,51 +57,54 @@ const RevisionCantidad = () => {
       console.error(error);
     }
   };
-  
 
-  // Manejamos diferentes estados de carga
-  if (loading) return <p>Cargando datos...</p>;
-  if (!ordenSeleccionada) return <p>No se ha seleccionado ninguna orden de compra.</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p className={styles.noOrdersMessage}>Cargando datos...</p>;
+  if (!ordenSeleccionada) return <p className={styles.noOrdersMessage}>No se ha seleccionado ninguna orden de compra.</p>;
+  if (error) return <p className={styles.errorMessage}>{error}</p>;
 
   return (
-    <div>
-      <h1>Revisión de Cantidades</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Revisión de Cantidades</h1>
       {cantidades.length === 0 ? (
-        <p>No se encontraron insumos para la orden de compra.</p>
+        <p className={styles.noOrdersMessage}>No se encontraron insumos para la orden de compra.</p>
       ) : (
         <div>
-          <table>
-            <thead>
-              <tr>
-                <th>Código Insumo</th>
-                <th>Nombre Insumo</th>
-                <th>Unidad de Medida</th>
-                <th>Cantidad</th>
-                <th>Cantidad Recibida</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cantidades.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.cod_insumo}</td>
-                  <td>{item.nombre_insumo}</td>
-                  <td>{item.nombre_unidad}</td>
-                  <td>{item.cantidad_compra}</td>
-                  <td>
-                    <input
-                      type="number"
-                      value={item.cantidad_recibida || ''}
-                      onChange={(e) => handleCantidadChange(index, e)}
-                      min="0"
-                    />
-                  </td>
+          <div className={styles.tableContainer}>
+            <table className={styles.table}>
+              <thead className={styles.tableHead}>
+                <tr>
+                  <th>Código Insumo</th>
+                  <th>Nombre Insumo</th>
+                  <th>Unidad de Medida</th>
+                  <th>Cantidad</th>
+                  <th>Cantidad Recibida</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <button onClick={handleTerminarRevision}>Terminar Revisión</button>
-          <button onClick={() => navigate("/modulo5/revisioncalidad")}>Iniciar revisión calidad</button>
+              </thead>
+              <tbody>
+                {cantidades.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.cod_insumo}</td>
+                    <td>{item.nombre_insumo}</td>
+                    <td>{item.nombre_unidad}</td>
+                    <td>{item.cantidad_compra}</td>
+                    <td>
+                      <input
+                        type="number"
+                        value={item.cantidad_recibida || ''}
+                        onChange={(e) => handleCantidadChange(index, e)}
+                        min="0"
+                        className={styles.inputNumber}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className={styles.buttonContainer}>
+            <button className={styles.button} onClick={handleTerminarRevision}>Terminar Revisión</button>
+            <button className={`${styles.button} ${styles.nextButton}`} onClick={() => navigate("/modulo5/revisioncalidad")}>Iniciar revisión calidad</button>
+          </div>
         </div>
       )}
     </div>
@@ -113,3 +112,4 @@ const RevisionCantidad = () => {
 };
 
 export default RevisionCantidad;
+

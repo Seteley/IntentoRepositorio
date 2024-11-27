@@ -1,0 +1,90 @@
+.product-card {
+  width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 20px;
+}
+
+.product-card h3 {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.quantity-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.add-button,
+.remove-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.remove-button {
+  background-color: #dc3545;
+}
+
+.add-button:hover,
+.remove-button:hover {
+  opacity: 0.9;
+}
+
+.quantity-display {
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+.products-container {
+  padding: 20px;
+}
+
+.back-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.add-all-button,
+.ready-button {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.ready-button {
+  background-color: #007bff;
+}
+
+.add-all-button:hover,
+.ready-button:hover {
+  opacity: 0.9;
+}

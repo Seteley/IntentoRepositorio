@@ -10,8 +10,15 @@ function IngresoInicio() {
   const [condiciones, setCondiciones] = useState([]); // Aquí se guardan los datos de las condiciones
   const [loading, setLoading] = useState(false); // Estado de carga
   const [error, setError] = useState(null); // Estado de error
+  const [insumosAgregados, setInsumosAgregados] = useState([]); // Nuevo estado para los insumos agregados
 
   const navigate = useNavigate(); // Usar useNavigate para redirigir
+
+  // Recuperar insumos agregados de localStorage al montar el componente
+  useEffect(() => {
+    const insumosGuardados = JSON.parse(localStorage.getItem('insumosAgregados')) || [];
+    setInsumosAgregados(insumosGuardados);
+  }, []);
 
   // Función para manejar la solicitud de las condiciones
   const obtenerCondiciones = async () => {
@@ -42,6 +49,12 @@ function IngresoInicio() {
   const manejarAgregarInsumo = (codInsumo) => {
     setInsumoSeleccionado(codInsumo); // Guardar el código del insumo en el contexto
     alert(`Insumo con código ${codInsumo} agregado.`); // Mostrar un mensaje de confirmación
+
+    // Actualizar el estado y guardar en localStorage
+    const nuevosInsumos = [...insumosAgregados, codInsumo];
+    setInsumosAgregados(nuevosInsumos);
+    localStorage.setItem('insumosAgregados', JSON.stringify(nuevosInsumos));
+
     navigate('/modulo5/ingresoalmacen'); // Redirigir a la página de ingreso al almacén
   };
 
@@ -84,7 +97,10 @@ function IngresoInicio() {
                 <td>{condicion.cantidad_recibida}</td>
                 <td>{condicion.nombre_condiciones}</td>
                 <td>
-                  <button onClick={() => manejarAgregarInsumo(condicion.cod_insumo)}>
+                  <button
+                    onClick={() => manejarAgregarInsumo(condicion.cod_insumo)}
+                    disabled={insumosAgregados.includes(condicion.cod_insumo)} // Deshabilitar si el insumo ya ha sido agregado
+                  >
                     Agregar Insumo
                   </button>
                 </td>

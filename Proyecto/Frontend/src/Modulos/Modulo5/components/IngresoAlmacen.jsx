@@ -7,7 +7,6 @@ import { fetchAlmacenes, fetchIngresarStock } from "../Service";
 import { fetchInsertarMovimiento } from "../Service"; 
 import { fetchActualizarFinIngreso } from "../Service";
 
-
 function IngresoAlmacen() {
   const { empleado } = useContext(EmpleadoContext); 
   const { insumoSeleccionado } = useContext(InsumoContext); 
@@ -16,6 +15,7 @@ function IngresoAlmacen() {
   const [error, setError] = useState(null); 
   const [almacenSeleccionado, setAlmacenSeleccionado] = useState(null); 
   const [fechaVencimiento, setFechaVencimiento] = useState(""); 
+  const [ingresoIniciado, setIngresoIniciado] = useState(false); // Nuevo estado
   const navigate = useNavigate();
 
   // Cargar los datos al montar el componente
@@ -64,6 +64,9 @@ function IngresoAlmacen() {
       );
       alert(mensajeStock); 
 
+      // Actualizamos el estado de ingreso iniciado
+      setIngresoIniciado(true); // Marcamos que el proceso ha iniciado
+
       // Validar los parámetros antes de llamar a fetchInsertarMovimiento
       if (!ordenSeleccionada) {
         console.error("Error: ordenSeleccionada está vacío o indefinido");
@@ -103,13 +106,26 @@ function IngresoAlmacen() {
   };
 
   const handleTerminarIngreso = async () => {
+    console.log("Valor de ingresoIniciado:", ingresoIniciado); // Debugging line
+    
+    if (!ingresoIniciado) {
+      alert("Por favor, inicia el ingreso al almacén antes de terminarlo.");
+      return; // No hacer nada si no se ha iniciado
+    }
+  
     try {
       const mensaje = await fetchActualizarFinIngreso();
       alert(mensaje);
+  
+      // Restablecer ingresoIniciado a false después de terminar el ingreso
+      setIngresoIniciado(false);
+  
     } catch (err) {
       setError(`Error en fetchActualizarFinIngreso: ${err.message}`);
     }
   };
+  
+  
   
 
   return (
@@ -172,16 +188,23 @@ function IngresoAlmacen() {
 
       {/* Botones para iniciar y terminar ingreso */}
       <div style={{ marginTop: "20px", textAlign: "center" }}>
-        <button type="button" onClick={handleIngreso} style={{ marginRight: "10px" }}>
+        <button 
+          type="button" 
+          onClick={handleIngreso} 
+          style={{ marginRight: "10px" }}
+        >
           Iniciar ingreso a almacén
         </button>
+
+        {/* Botón "Terminar ingreso" solo habilitado si ingresoIniciado es true */}
         <button type="button" onClick={handleTerminarIngreso}>
-          Terminar ingreso a almacén
+  Terminar ingreso a almacén
+</button>
+
+
+        <button onClick={() => navigate("/modulo5/ingresoinicio")}>
+          Ingresar otro insumo
         </button>
-        <button onClick={() => navigate("/modulo5/ingresoinicio")}>Ingresar otro insumo</button>
-
-
-
       </div>
     </div>
   );

@@ -1,40 +1,59 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { EmpleadoContext } from "../context/EmpleadoContext";
+import { PlusCircle, PackagePlus, PackageMinus, FileSpreadsheet, ClipboardList, History, ArrowLeft } from 'lucide-react';
+import '../styles/Inicio.css';
 
 const Inicio = () => {
   const navigate = useNavigate();
   const { empleado } = useContext(EmpleadoContext);
 
-  // Maneja la navegación de forma genérica
   const handleNavigation = (ruta) => {
     navigate(ruta);
   };
 
-  // Verifica si el empleado está definido antes de navegar a "Ingreso Insumo"
   const handleIngresoInsumo = () => {
     if (empleado) {
       navigate(`/modulo5/ingresoinsumo/verordenes`);
     } else {
-      // En lugar de un alert, puedes mostrar un mensaje en la UI
       alert("Por favor ingrese un código de empleado primero.");
-      // Opcionalmente, puedes redirigir a la página de formulario para ingresar el código de empleado
       navigate("/modulo5");
     }
   };
 
+  const modules = [
+    { icon: <PlusCircle className="icon" />, route: "/modulo5/nuevoinsumo", name: "Nuevo Insumo" },
+    { icon: <PackagePlus className="icon" />, route: "/modulo5/ingresoinsumo/verordenes", name: "Ingreso Insumo", action: handleIngresoInsumo },
+    { icon: <PackageMinus className="icon" />, route: "/modulo5/retirarinsumo", name: "Retirar Insumo" },
+    { icon: <FileSpreadsheet className="icon" />, route: "/modulo5/hojaproduccion", name: "Hoja de Producción" },
+    { icon: <ClipboardList className="icon" />, route: "/modulo5/revisarinventario", name: "Revisar Inventario" },
+    { icon: <History className="icon" />, route: "/modulo5/vermovimientos", name: "Ver Movimientos" },
+  ];
+
   return (
-    <div>
-      <h2>Gestión de Inventario</h2>
-      <div>
-        <button onClick={() => handleNavigation("/modulo5/nuevoinsumo")}>Nuevo Insumo</button>
-        <button onClick={handleIngresoInsumo}>Ingreso Insumo</button>
-        <button onClick={() => handleNavigation("/modulo5/retirarinsumo")}>Retirar Insumo</button>
-        <button onClick={() => handleNavigation("/modulo5/hojaproduccion")}>Hoja de Producción</button>
-        <button onClick={() => handleNavigation("/modulo5/revisarinventario")}>Revisar Inventario</button>
-        <button onClick={() => handleNavigation("/modulo5/vermovimientos")}>Ver Movimientos</button>
+    <div className="container">
+      <h1>Seleccione una opción</h1>
+      <div className="module-grid">
+        {modules.map((module, index) => (
+          <div key={index} className="module-item">
+            <div className="module-card">
+              <div className="icon-container">
+                {module.icon}
+              </div>
+              <button 
+                className="module-button"
+                onClick={module.action || (() => handleNavigation(module.route))}
+              >
+                {module.name}
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
-      <button onClick={() => handleNavigation("/modulo5")}>Seleccionar otro módulo</button>
+      <button className="back-button" onClick={() => handleNavigation("/Default")}>
+        <ArrowLeft className="icon" />
+        Seleccionar otro módulo
+      </button>
     </div>
   );
 };

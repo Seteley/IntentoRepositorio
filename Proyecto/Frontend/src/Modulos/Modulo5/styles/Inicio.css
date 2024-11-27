@@ -1,0 +1,180 @@
+:root {
+    --turquoise: #40E0D0;
+    --red: #FF3B30;
+    --white: #FFFFFF;
+    --dark-gray: #333333;
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .container {
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1rem 2rem;
+    background-color: var(--white);
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+    color: var(--dark-gray);
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 600;
+  }
+  
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .module-item {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .module-card {
+    background-color: var(--turquoise);
+    border-radius: 24px;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .module-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .icon-container {
+    background-color: var(--white);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem;
+    transition: all 0.3s ease;
+  }
+  
+  .module-card:hover .icon-container {
+    transform: scale(1.1);
+  }
+  
+  .icon {
+    width: 100%;
+    height: 100%;
+    stroke-width: 1.8;
+    color: var(--red);
+  }
+  
+  .module-button {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    color: var(--white);
+    background-color: var(--red);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+  }
+  
+  .module-button:hover {
+    background-color: #FF574D;
+  }
+  
+  .module-button:active {
+    transform: translateY(1px);
+  }
+  
+  .back-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    color: var(--white);
+    background-color: var(--dark-gray);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 300px; /* Hace que el botón sea más largo */
+    margin: 0 auto; /* Esto asegura que el botón esté centrado si no lo está */
+  }
+  
+  .back-button:hover {
+    background-color: #555555;
+  }
+  
+  .back-button .icon {
+    width: 20px;
+    height: 20px;
+    color: var(--white);
+  }
+  
+  @media (max-width: 768px) {
+    .module-grid {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+  
+    h1 {
+      font-size: 2rem;
+    }
+  
+    .module-card {
+      padding: 1rem 0.8rem;
+    }
+  
+    .icon-container {
+      width: 50px;
+      height: 50px;
+    }
+  
+    .module-button {
+      font-size: 0.8rem;
+      min-height: 40px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 1.75rem;
+    }
+  
+    .module-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .back-button {
+      font-size: 0.9rem;
+      padding: 0.6rem 1rem;
+    }
+  }
+  
+  

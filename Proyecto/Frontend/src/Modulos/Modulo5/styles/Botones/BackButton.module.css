@@ -1,0 +1,42 @@
+/* Definir las variables de color */
+:root {
+  --turquoise: #40E0D0;
+  --red: #FF3B30;
+  --white: #FFFFFF;
+  --dark-gray: #333333;
+}
+
+/* Estilos específicos para el botón de retroceso */
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  color: var(--white); /* Utiliza la variable de color blanco */
+  background-color: var(--dark-gray); /* Utiliza la variable de color gris oscuro */
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 300px; /* Hace que el botón sea más largo */
+  margin: 0 auto; /* Centra el botón */
+}
+
+.back-button:hover {
+  background-color: #555555; /* Color de fondo en el hover */
+}
+
+.back-button .icon {
+  width: 20px;
+  height: 20px;
+  color: var(--white); /* Color blanco para el icono */
+}
+
+@media (max-width: 768px) {
+  .back-button {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+}

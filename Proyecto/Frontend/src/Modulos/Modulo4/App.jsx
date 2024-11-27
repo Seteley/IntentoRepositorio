@@ -1,39 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { fetchEmpleados } from "./Service";
-import EmployeeTable from "./EmployeeTable";
-import "../../../src/App.css"
+import React from 'react'
+import Sidebar from '../Modulo4/components/Sidebar'
+import Header from '../Modulo4/components/Header'
+import StaffDemand from '../Modulo4/components/StaffDemand'
+import AvailableStaff from '../Modulo4/components/AvailableStaff'
+import AssignedShifts from '../Modulo4/components/AssignedShifts'
 
-const App = () => {
-  const [empleados, setEmpleados] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const loadEmpleados = async () => {
-      try {
-        const data = await fetchEmpleados();
-        console.log("Datos de empleados recibidos", data);
-        setEmpleados(data);
-      } catch (err) {
-        console.error("Error al cargar empleados", err);
-        setError("Error al cargar empleados.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadEmpleados();
-  }, []);
-
-  if (loading) return <div>Cargando empleados...</div>;
-  if (error) return <div>{error}</div>;
-
+export default function ShiftManagement() {
   return (
-    <div>
-      <h1>Lista de Empleados</h1>
-      <EmployeeTable empleados={empleados} />
+    <div className="min-h-screen">
+      <Header />
+      <div className="flex">
+        <Sidebar />
+        <main className="flex-1 p-8">
+          <h1 className="text-3xl font-bold mb-8">Programación de Turnos</h1>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <StaffDemand />
+            <AvailableStaff />
+          </div>
+          
+          <AssignedShifts />
+        </main>
+      </div>
     </div>
-  );
-};
-
-export default App;
+  )
+}
